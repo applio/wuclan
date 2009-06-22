@@ -1,0 +1,13 @@
+
+
+
+
+
+h3. lib/wu_clan/models
+
+Defines the Wukong objects we'll most often use
+
+* The user models:
+
+* TwitterUser
+* TwitterUserProfiles
