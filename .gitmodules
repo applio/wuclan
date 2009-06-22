@@ -1,0 +1,3 @@
+[submodule "old_lib"]
+	path = old_lib
+	url = git://github.com/mrflip/imw_twitter_friends.git
