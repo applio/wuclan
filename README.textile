@@ -3,7 +3,7 @@
 
 
 
-h3. lib/wu_clan/models
+h3. lib/wuclan/models
 
 Defines the Wukong objects we'll most often use
 
@@ -11,3 +11,18 @@ Defines the Wukong objects we'll most often use
 
 * TwitterUser
 * TwitterUserProfiles
+
+
+
+h3. lib/wuclan/request
+
+
+* Request -- the basic request metadata
+
+* Parse -- dispatches the request contents into wuclan objects
+
+* Wuclan::Request::Streamer
+  ensures that the request is left alone while recordizing.
+
+
+h3. lib/wuclan/  

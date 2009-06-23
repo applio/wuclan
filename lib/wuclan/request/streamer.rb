@@ -10,7 +10,7 @@ module Wuclan
     #
     class Streamer < Wukong::Streamer::StructStreamer
       cattr_accessor :number_of_fields_before_request
-      self.number_of_fields_before_request
+      self.number_of_fields_before_request =
       #
       #
       #
