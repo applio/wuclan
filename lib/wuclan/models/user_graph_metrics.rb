@@ -1,5 +1,5 @@
-module TwitterFriends
-  module StructModel
+module Wuclan
+  module Models
     class UserGraphMetrics < Struct.new(
         :id,
         :any_with,

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-module TwitterFriends
+module Wuclan
   module Grok
     module TweetRegexes
       # ===========================================================================

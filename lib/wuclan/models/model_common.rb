@@ -1,6 +1,6 @@
 require 'date'
-module TwitterFriends
-  module StructModel
+module Wuclan
+  module Models
     module ModelCommon
 
       #

@@ -1,4 +1,4 @@
-module TwitterFriends
+module Wuclan
   module JsonModel
 
     # ===========================================================================

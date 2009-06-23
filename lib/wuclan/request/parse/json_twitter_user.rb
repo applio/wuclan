@@ -1,5 +1,5 @@
 require 'wukong/encoding'
-module TwitterFriends
+module Wuclan
   module JsonModel
 
     #

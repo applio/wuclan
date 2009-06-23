@@ -1,5 +1,5 @@
 require 'wukong/encoding'
-module TwitterFriends
+module Wuclan
   module JsonModel
     #
     # The JSON tweets records come off the wire a bit more heavyweight than we'd like.

@@ -64,8 +64,8 @@ end
 #
 #
 #
-module TwitterFriends
-  module StructModel
+module Wuclan
+  module Models
     class BaseUserTweetMetrics < TypedStruct.new(
         [:id,                 Integer],
         [:tw_sampled,         Integer],
@@ -439,5 +439,5 @@ end
 # Executes only if run from command line
 #
 if __FILE__ == $0
-  puts "rsrc\t"+TwitterFriends::StructModel::UserMetrics.members.join("\t")
+  puts "rsrc\t"+Wuclan::Models::UserMetrics.members.join("\t")
 end

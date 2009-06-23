@@ -1,6 +1,15 @@
-module TwitterFriends::StructModel
+module Wuclan::Models
   # features common to all user-user relationships.
-  module RelationshipCommon
+  module RelationshipBase
+    module ClassMethods
+      def rel_name
+        @rel_name ||= resource_name.to_s.gsub(/a_(.*)_b/, '\1')
+      end
+    end
+
+    def self.included base
+      base.class_eval{ extend ClassMethods }
+    end
   end
 
   # Follower/Friend relationship
@@ -9,7 +18,7 @@ module TwitterFriends::StructModel
       [:user_b_id,              Integer]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
     # Key on the user-user pair
     def num_key_fields()  2  end
     def numeric_id_fields()     [:user_a_id, :user_b_id] ; end
@@ -22,7 +31,7 @@ module TwitterFriends::StructModel
       [:status_id,              Integer]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
     # Key on user_a-user_b-status_id (really just user_a-status_id is enough)
     def num_key_fields()  3 end
     def numeric_id_fields()     [:user_a_id, :user_b_id, :status_id] ; end
@@ -36,7 +45,7 @@ module TwitterFriends::StructModel
       [:in_reply_to_status_id,  Integer]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
     # Key on user_a-user_b-status_id
     def num_key_fields()  3  end
     def numeric_id_fields()     [:user_a_id, :user_b_id, :status_id, :in_reply_to_status_id] ; end
@@ -50,7 +59,7 @@ module TwitterFriends::StructModel
       [:status_id,              Integer]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
     # Key on user_a-user_b-status_id
     def num_key_fields()  3 end
     def numeric_id_fields()     [:user_a_id, :status_id] ; end
@@ -64,7 +73,7 @@ module TwitterFriends::StructModel
       [:status_id,              Integer]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
     # Key on user_a-user_b-status_id
     def num_key_fields()  3 end
     def numeric_id_fields()     [:user_a_id, :user_b_id, :status_id] ; end
@@ -100,7 +109,7 @@ module TwitterFriends::StructModel
       [:text,                   String]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
 
     def initialize *args
       super *args
@@ -126,7 +135,7 @@ module TwitterFriends::StructModel
       [:text,                   String]
       )
     include ModelCommon
-    include RelationshipCommon
+    include RelationshipBase
 
     def initialize *args
       super *args

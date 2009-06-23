@@ -6,8 +6,8 @@ if __FILE__ == $0 then $: << File.dirname(__FILE__)+'/../..'; require 'wukong'; 
 #
 #
 #
-module TwitterFriends
-  module StructModel
+module Wuclan
+  module Models
     class UserTweetMetrics < TypedStruct.new(
         [:id,                 Integer],
         [:tw_seen,            Integer],
@@ -26,8 +26,8 @@ module TwitterFriends
     # 47tw_cove 48fv_cove 49scrape_ 50scrape_ 51scrape_ 52 scraped_at
     # 53part_scraped_at 54 created_at 55 last_tw_at
 
-    
-        
+
+
     # [
     #     #
     #     [:fo_day,            Float],      #   x       Followers accumulated / day
@@ -65,8 +65,8 @@ module TwitterFriends
     #     [:fv_scraped_at,     Integer],      #     c     How long since your favorites graph record was scraped
     #     #
     #   ]
-    # 
-    
+    #
+
     class UserMetrics < TypedStruct.new(
         [:id,                Integer],
         #
@@ -82,7 +82,7 @@ module TwitterFriends
         :n_friends_cat,
         :n_tweets_cat,
         :active,
-        
+
         [:any_with,          Integer],    #          Any graph link to
         :neighborhood_size,
         :friend_follower_balance
@@ -273,5 +273,5 @@ end
 # Executes only if run from command line
 #
 if __FILE__ == $0
-  puts "rsrc\t"+TwitterFriends::StructModel::UserMetrics.members.join("\t")
+  puts "rsrc\t"+Wuclan::Models::UserMetrics.members.join("\t")
 end

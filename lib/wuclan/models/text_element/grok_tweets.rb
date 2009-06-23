@@ -1,8 +1,8 @@
-require 'twitter_friends/grok/tweet_regexes'
-require 'twitter_friends/struct_model'
+require 'wuclan/grok/tweet_regexes'
+require 'wuclan/models'
 require 'wukong/encoding'
-include TwitterFriends::Grok::TweetRegexes
-include TwitterFriends::StructModel
+include Wuclan::Grok::TweetRegexes
+include Wuclan::Models
 
 Tweet.class_eval do
 

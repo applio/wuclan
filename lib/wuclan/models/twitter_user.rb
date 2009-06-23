@@ -1,4 +1,4 @@
-module TwitterFriends::StructModel
+module Wuclan::Models
 
   #
   # Mixin: common methods for each of the user representations / partitions

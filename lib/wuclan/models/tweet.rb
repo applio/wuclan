@@ -1,4 +1,4 @@
-module TwitterFriends::StructModel
+module Wuclan::Models
 
   #
   # Tweet

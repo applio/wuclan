@@ -1,6 +1,6 @@
 require 'date'
-module TwitterFriends
-  module StructModel
+module Wuclan
+  module Models
     USER_SCRAPING_CONTEXTS = [:user, :friends_ids, :followers_ids, :favorites, ] # :friends, :followers, :user_timeline]
     # USER_SCRAPING_METRICS_MEMBERS = []
     # USER_SCRAPING_CONTEXTS.map do |context|
