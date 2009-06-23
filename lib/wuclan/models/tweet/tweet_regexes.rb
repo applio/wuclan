@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 module Wuclan
-  module Grok
+  module Models
     module TweetRegexes
       # ===========================================================================
       #
