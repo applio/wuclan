@@ -24,17 +24,11 @@ module WordFreq
   end
 
 
-  class Script < Wukong::Script
-    def default_options
-      super.merge :reduce_tasks => 0
-    end
-  end
+  # Execute the script
+  Wukong::Script.new(
+    Mapper,
+    nil, # Reducer
+    :reduce_tasks => 0
+    ).run
 end
 
-#
-# Executes the script
-#
-WordFreq::Script.new(
-  WordFreq::Mapper,
-  nil # WordFreq::Reducer
-  ).run

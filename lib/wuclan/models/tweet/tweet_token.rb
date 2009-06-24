@@ -2,7 +2,12 @@ require 'active_support/core_ext/class/inheritable_attributes.rb'
 require 'wuclan/models/tweet/tweet_regexes'
 module Wuclan::Models
 
-  class TweetToken < Struct.new(:word, :user_id, :tweet_id, :freq)
+  class TweetToken < TypedStruct.new(
+      [:word,           String],
+      [:user_id,        Integer],
+      [:tweet_id,       Integer],
+      [:freq,            Integer]
+      )
     include ModelCommon
     include TweetRegexes
     class_inheritable_accessor :extract_re
