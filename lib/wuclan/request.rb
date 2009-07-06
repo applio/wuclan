@@ -1,69 +1,71 @@
 module Wuclan
-  class Request
-    cattr_accessor :resource_path
-    attr_accessor  :identifier, :page
+  module Request
+    class Base
+      cattr_accessor :resource_path
+      attr_accessor  :identifier, :page
 
-    # Regular expression to grok resource from uri
-    GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json\?page=(\d+)}
+      # Regular expression to grok resource from uri
+      GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json\?page=(\d+)}
 
-    #
-    def url
-      "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
+      #
+      def url
+        "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
+      end
+
+      #
+      # Threshold count-per-page and actual count to get number of expected pages.
+      # Cap the request with max
+      def self.pages_from_count per_page, count, max=nil
+        num = [ (count.to_f / per_page.to_f).ceil, 0 ].max
+        [num, max].compact.min
+      end
     end
 
-    #
-    # Threshold count-per-page and actual count to get number of expected pages.
-    # Cap the request with max
-    def self.pages_from_count per_page, count, max=nil
-      num = [ (count.to_f / per_page.to_f).ceil, 0 ].max
-      [num, max].compact.min
+    class UserRequest < Wuclan::Request::Base
+      self.resource_path = 'users/show'
+      def pages(thing) self.class.pages_from_count(200, thing.statuses_count,   20) end
     end
+    class FollowersRequest < Wuclan::Request::Base
+      self.resource_path = 'statuses/followers'
+      def pages(thing) self.class.pages_from_count(100, thing.followers_count,  10) end
+    end
+    class FriendsRequest < Wuclan::Request::Base
+      self.resource_path = 'statuses/friends'
+      def pages(thing) self.class.pages_from_count(100, thing.friends_count,    10) end
+    end
+    class FavoritesRequest < Wuclan::Request::Base
+      self.resource_path = 'favorites'
+      def pages(thing) self.class.pages_from_count( 20, thing.favourites_count, 20) end
+    end
+    class FollowersIdsRequest < Wuclan::Request::Base
+      self.resource_path = 'followers/ids'
+      def pages(thing) thing.followers_count == 0 ? 0 : 1 end
+      def url() "http://twitter.com/#{resource_path}/#{identifier}.json" end
+    end
+    class FriendsIdsRequest < Wuclan::Request::Base
+      self.resource_path = 'friends/ids'
+      def pages(thing) thing.friends_count   == 0 ? 0 : 1 end
+      def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
+    end
+    class UserTimelineRequest < Wuclan::Request::Base
+      self.resource_path = 'statuses/user_timeline'
+      def pages(thing) 1 end
+      def url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=200"   end
+    end
+    class PublicTimelineRequest < Wuclan::Request::Base
+      self.resource_path = 'statuses/public_timeline'
+      def pages(thing) 1 end
+      def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
+    end
+    # class HosebirdRequest < Wuclan::Request::Base
+    #   #self.resource_path = 'statuses/public_timeline'
+    # end
+    # class SearchRequest < Wuclan::Request::Base
+    #   def pages(thing) self.class.pages_from_count(100, 1500) end
+    # end
   end
 
-  class UserRequest < Wuclan::Request
-    self.resource_path = 'users/show'
-    def pages(thing) self.class.pages_from_count(200, thing.statuses_count,   20) end
-  end
-  class FollowersRequest < Wuclan::Request
-    self.resource_path = 'statuses/followers'
-    def pages(thing) self.class.pages_from_count(100, thing.followers_count,  10) end
-  end
-  class FriendsRequest < Wuclan::Request
-    self.resource_path = 'statuses/friends'
-    def pages(thing) self.class.pages_from_count(100, thing.friends_count,    10) end
-  end
-  class FavoritesRequest < Wuclan::Request
-    self.resource_path = 'favorites'
-    def pages(thing) self.class.pages_from_count( 20, thing.favourites_count, 20) end
-  end
-  class FollowersIdsRequest < Wuclan::Request
-    self.resource_path = 'followers/ids'
-    def pages(thing) thing.followers_count == 0 ? 0 : 1 end
-    def url() "http://twitter.com/#{resource_path}/#{identifier}.json" end
-  end
-  class FriendsIdsRequest < Wuclan::Request
-    self.resource_path = 'friends/ids'
-    def pages(thing) thing.friends_count   == 0 ? 0 : 1 end
-    def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
-  end
-  class UserTimelineRequest < Wuclan::Request
-    self.resource_path = 'statuses/user_timeline'
-    def pages(thing) 1 end
-    def url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=200"   end
-  end
-  class PublicTimelineRequest < Wuclan::Request
-    self.resource_path = 'statuses/public_timeline'
-    def pages(thing) 1 end
-    def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
-  end
-  # class HosebirdRequest < Wuclan::Request
-  #   #self.resource_path = 'statuses/public_timeline'
-  # end
-  # class SearchRequest < Wuclan::Request
-  #   def pages(thing) self.class.pages_from_count(100, 1500) end
-  # end
 end
-
 # language: http://en.wikipedia.org/wiki/ISO_639-1
 #
 # * Find tweets containing a word:         http://search.twitter.com/search.atom?q=twitter
