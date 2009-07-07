@@ -4,14 +4,19 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "wuclan"
-    gem.summary = %Q{Massive-scale social network analysis. Nothing to f with.}
-    gem.email = "flip@infochimps.org"
-    gem.homepage = "http://github.com/mrflip/wuclan"
-    gem.authors = ["Philip (flip) Kromer"]
+    gem.name           = "wuclan"
+    # gem.executables  = []
+    gem.summary        = %Q{Massive-scale social network analysis. Nothing to f with.}
+    gem.description    = %Q{Massive-scale social network analysis. Nothing to f with.}
+    gem.email          = "flip@infochimps.org"
+    gem.homepage       = "http://github.com/mrflip/wuclan"
+    gem.authors        = ["Philip (flip) Kromer"]
+    gem.files          =  FileList["[A-Z]*", "{bin,generators,lib,test,docs}/**/*"]
+    gem.add_dependency 'mrflip-wukong'
+    gem.add_dependency 'mrflip-monkeyshines'
+    gem.add_dependency 'trollop'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
-
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
