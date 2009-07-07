@@ -1,1 +1,1 @@
-require 'wuclan/models'
+require 'wuclan/request'
