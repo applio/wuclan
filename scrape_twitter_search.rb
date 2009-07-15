@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
 $: << ENV['WUKONG_PATH']
 require 'wukong'
-require 'wukong/utils/filename_pattern'
-require 'wuclan'
 require 'monkeyshines'
-require 'wuclan/domains/twitter'
-require 'trollop' # gem install trollop
-
+require 'monkeyshines/scrape_store/read_thru_store'
+require 'monkeyshines/scrape_engine/http_scraper'
+require 'monkeyshines/scrape_request'
+require 'monkeyshines/scrape_request/paginated'
+require 'monkeyshines/scrape_request/raw_json_contents'
+require 'trollop'
+require File.dirname(__FILE__)+'/config/config_private'
 opts = Trollop::options do
   opt :from,      "Flat file of request parameters", :type => String
   opt :type,      "Class to instantiate from each line of the --from file, e.g. --type=ShortUrlHeadRequest", :type => String
@@ -15,18 +17,21 @@ opts = Trollop::options do
     :default => ":revdom/:date/:revdom+:datetime-:pid.tsv"
 end
 
-p opts # a hash: { :monkey => false, :goat => true, :num_limbs => 4, :num_thumbs => nil }
+class TwitterSearchRequest < Monkeyshines::ScrapeRequest
+  include Monkeyshines::RawJsonContents
+  def items
+    parsed_contents['results']
+  end
+end
 
-# Request type
-Trolllop::die :type, "should give the class described in the --from file" if opts[:type].blank?
-request_klass = Wukong.class_from_resource(opts[:type]) or Trolllop::die(:type, "isn't a class I can instantiate")
-
-class TwitterSearchScrapable < Scrapable
-  include PaginatedWithLimit
-  include RawJsonContents
-  attr_accessor :upper_limit, :lower_limit, :url_pattern
-  attr_accessor :first_item_id, :last_item_id
-  attr_accessor :first_item_at, :last_item_at, :num_items
+class TwitterSearchScrapable < Struct.new(:query_term,
+    :first_item_id, :last_item_id,
+    :first_item_at, :last_item_at, :num_items
+    )
+  include Monkeyshines::Paginated #WithLimit
+  self.items_per_page = 100
+  self.max_pages      = 2
+  attr_accessor :max_id
 
   def initialize *args
     super *args
@@ -34,47 +39,64 @@ class TwitterSearchScrapable < Scrapable
   end
 
   def acknowledge response
-    first_item = response['results'].first
-    last_item  = response['results'].last
-    num_items  = response['results'].length
-    self.first_item_at ||= Time.parse(first_item['created_at'])
-    self.first_item_id ||= first_item['id']
-    self.last_item_at    = Time.parse(last_item['created_at'])
-    self.last_item_id    = last_item['id']
-    self.num_items      += num_items
+    return unless response && response.items
+    self.num_items += response.items.length
+    if (first_item = response.items.first)
+      self.first_item_at ||= Time.parse(first_item['created_at'])
+      self.first_item_id ||= first_item['id']
+    end
+    if (last_item = response.items.last)
+      self.last_item_at    = Time.parse(last_item['created_at'])
+      self.last_item_id    = last_item['id']
+    end
   end
 
   # "since_id":0,
   # "max_id":1480307926,
   # "refresh_url":"?since_id=1480307926&q=%40twitterapi",
   # "next_page":"?page=2&max_id=1480307926&q=%40twitterapi",
-  def url
-    # FIXME -- this fails unless qs is in place
-    self.url_pattern + "&max_id=#{self.max_id}&since_id=#{self.min_id}"
+  def make_request page, pageinfo
+    url_str = "http://search.twitter.com/search.json?q=#{query_term}&rpp=#{items_per_page}"
+    url_str << "&max_id=#{max_id}"   if max_id
+    url_str << "&page=#{page}"       if page.to_i > 0
+    # url_str << "&since_id=#{min_id}" if min_id
+    TwitterSearchRequest.new url_str
   end
+end
 
+class RescheduledRequestStream < Monkeyshines::FlatFileRequestStream
+  def file
+    @file ||= $stdout
+  end
+  def <<(val)
+    file << val
+  end
 end
 
 # Request stream
-Trolllop::die :from, "should give the class described in the --from file"
-request_stream = FlatFileRequestStream.new(opts[:from], TwitterSearchRequest)
+Trollop::die :from, "should give the class described in the --from file" unless opts[:from]
+search_term_scrapables = Monkeyshines::FlatFileRequestStream.new(opts[:from], TwitterSearchScrapable)
+
+# Reschedule next requests
+#rescheduled_requests = Monkeyshines::FlatFileRequestStream.new(opts[:reschedule_into], TwitterSearchScrapable, :writeable => true)
+rescheduled_requests = RescheduledRequestStream.new('', TwitterSearchScrapable, :writeable => true)
+
+# # Scrape Store
+# store   = Monkeyshines::ScrapeStore::FlatFileStore.new_from_command_line opts
 
 # Scraper
-
-# Store
+scraper = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONFIG[:twitter]
 
 #
-# Whee! Get each request
-
-search_term_requests.each do |search_term_request|
-  new_lower_limit = nil
-  search_term_request.each_page do |page_request|
-    response = scraper.get(page_request)
-    if response
-      # save the response
-      store.save response
-    end
+search_term_scrapables.each do |search_term_scrapable|
+  search_term_scrapable.each_page do |req|
+    response = scraper.get(req)
+    #   if response
+    #     # save the response
+    #     store.save response
+    #   end
   end
-  # store completed request with updated min_id
-  completed_requests << search_term_request
+
+  # # store completed request with updated min_id
+  # completed_requests << search_term_request
 end
