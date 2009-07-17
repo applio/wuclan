@@ -13,7 +13,8 @@ require 'monkeyshines/scrape_engine/http_scraper'
 # Command line options
 #
 opts = Trollop::options do
-  opt :from,             "Flat file of request parameters", :type => String
+  opt :from,             "Flat file of request parameters",                   :type => String
+  opt :store_db,        "Tokyo cabinet db name",                              :type => String
 end
 Trollop::die :from, "should give the class described in the --from file" unless opts[:from]
 
@@ -29,8 +30,8 @@ scraper         = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONF
 # Log every N requests
 periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 100, :time_interval => 10)
 
-# # Persist scrape_job jobs in distributed DB
-# store   = Monkeyshines::ScrapeStore::ReadThruStore.new_from_command_line opts
+# Persist scrape_job jobs in distributed DB
+job_store   = Monkeyshines::ScrapeStore::KeyStore.new_from_command_line opts
 
 Twitter::Scrape::TwitterSearchJob.hard_request_limit = 5
 
@@ -44,6 +45,7 @@ def add_scrape_job scrape_job
   end
   SCRAPES[scrape_job.query_term] = scrape_job
 end
+
 
 Monkeyshines::RequestStream::BeanstalkQueue.class_eval do
   def job_queue_stats
@@ -61,24 +63,31 @@ Monkeyshines::RequestStream::BeanstalkQueue.class_eval do
       kicked = job_queue.open_connections.map{|conxn| conxn.kick(20) }
       kicked = kicked.inject(0){|sum, n| sum += n }
       # For all the jobs we can get our hands on quickly,
-      while(job = reserve_job!(0.5)) do
-        # archive the job under its query term
-        scrape_job = new_request_from_job(job)
-        add_scrape_job scrape_job
-        $stderr.puts scrape_job.to_flat[1..-1].join("\t")
+      while(qjob = reserve_job!(0.5)) do
+        scrape_job = scrape_job_from_qjob(qjob)
+        yield scrape_job
         # and remove it from the pool
-        job.delete
+        qjob.delete
       end
-      # stop when there's no more jobs
+      # stop when there's no more qjobs
       break if (job_queue_total_jobs == 0) && (!job_queue.peek_ready)
     end
   end
 end
 
 begin
-  # request_queue.scrub_all{}
+  request_queue.scrub_all do |scrape_job|
+    # archive the job under its query term
+    add_scrape_job scrape_job
+    $stderr.puts scrape_job.to_flat[1..-1].join("\t")
+  end
   scrape_jobs.each do |scrape_job|
     next if (scrape_job.query_term =~ /^#/) || (scrape_job.query_term.blank?)
+    periodic_log.periodically{ [scrape_job] }
+    add_scrape_job scrape_job
+  end
+  job_store.each do |hsh|
+    scrape_job = Twitter::Scrape::TwitterSearchJob.from_hash hsh
     periodic_log.periodically{ [scrape_job] }
     add_scrape_job scrape_job
   end
@@ -88,11 +97,12 @@ ensure
   sorted = SCRAPES.sort_by{|term,scrape_job| [scrape_job.priority||65536, -(scrape_job.prev_rate||1440), term] }
   sorted.each do |term, scrape_job|
     puts scrape_job.to_flat[1..-1].join("\t")
+    job_store.save "#{scrape_job.class}-#{scrape_job.query_term}", scrape_job
   end
 end
 
-# request_queue.min_resched_delay = 30
-# sorted.each do |term, scrape_job|
-#   request_queue.save scrape_job, scrape_job.priority, (scrape_job.prev_rate ? nil : 0) rescue nil
-# end
+request_queue.min_resched_delay = 10
+sorted.each do |term, scrape_job|
+  request_queue.save scrape_job, scrape_job.priority, (scrape_job.prev_rate ? nil : 0) rescue nil
+end
 

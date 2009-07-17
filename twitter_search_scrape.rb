@@ -24,6 +24,7 @@ opts = Trollop::options do
     :default => 980
   opt :min_resched_delay,   "Don't run jobs more often than this (in seconds)",
     :default => 60*1
+  opt :store_db,        "Tokyo tyrant db name",                              :type => String
 end
 Trollop::die :dumpfile_dir unless opts[:dumpfile_dir]
 
@@ -37,6 +38,8 @@ store             = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dumpfile
 scraper           = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
 periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
+# Persist scrape_job jobs in distributed DB
+job_store   = Monkeyshines::ScrapeStore::KeyStore.new_from_command_line opts
 
 request_queue.each do |scrape_job|
   # Run through all pages for this search term
@@ -50,6 +53,7 @@ request_queue.each do |scrape_job|
     # return it to the scrape_job for bookkeeping
     response
   end
+  job_store.save "#{scrape_job.class}-#{scrape_job.query_term}", scrape_job
   sleep 0.5
 end
 request_queue.finish
