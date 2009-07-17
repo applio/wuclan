@@ -33,7 +33,7 @@ beanstalk_tube    = opts[:handle].gsub(/\w+/,'_')
 request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay))
 # Scrape Store for completed requests
 dumpfile_pattern  = Monkeyshines::Utils::FilenamePattern.new(opts[:dumpfile_pattern], opts.slice(:handle, :dumpfile_dir))
-store             = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dumpfile_pattern, opts[:dumpfile_chunk_time].to_i
+dumpfile          = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dumpfile_pattern, opts[:dumpfile_chunk_time].to_i
 # Scrape requests by HTTP
 scraper           = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
@@ -44,18 +44,17 @@ job_store   = Monkeyshines::ScrapeStore::KeyStore.new_from_command_line opts
 request_queue.each do |scrape_job|
   # Run through all pages for this search term
   scrape_job.each_request do |req|
-    # Make request
+    # Fetch request
     response = scraper.get(req)
     # save it if successful
-    store.save response if response
+    dumpfile.save response if response
     # log progress
     periodic_log.periodically{ ["%7d"%response.num_items, response.url] }
     # return it to the scrape_job for bookkeeping
     response
   end
+  # Persist the updated job to the scrape_jobs db, so that we can restart queue easily
   job_store.save "#{scrape_job.class}-#{scrape_job.query_term}", scrape_job
   sleep 0.5
 end
 request_queue.finish
-
-# Twitter::Scrape::TwitterSearchJob.hard_request_limit = 15

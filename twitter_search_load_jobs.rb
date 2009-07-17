@@ -38,14 +38,22 @@ Twitter::Scrape::TwitterSearchJob.hard_request_limit = 5
 SCRAPES = { }
 
 def add_scrape_job scrape_job
-  if SCRAPES[scrape_job.query_term] &&
-      (SCRAPES[scrape_job.query_term].prev_items.to_i >= scrape_job.prev_items.to_i)
-    # warn "Already have #{scrape_job.query_term}: #{SCRAPES[scrape_job.query_term]}"
-    return
-  end
+  return if SCRAPES[scrape_job.query_term] &&
+    (SCRAPES[scrape_job.query_term].prev_items.to_i >= scrape_job.prev_items.to_i)
   SCRAPES[scrape_job.query_term] = scrape_job
 end
 
+# def add_scrape_job scrape_job
+#   if SCRAPES[scrape_job.query_term]
+#     SCRAPES[scrape_job.query_term].priority = [SCRAPES[scrape_job.query_term].priority.to_i, scrape_job.priority.to_i].min
+#     if (SCRAPES[scrape_job.query_term].prev_items.to_i <= scrape_job.prev_items.to_i)
+#       SCRAPES[scrape_job.query_term] = scrape_job
+#     end
+#     # warn "Already have #{scrape_job.query_term}: #{SCRAPES[scrape_job.query_term]}"
+#     return
+#   end
+#   SCRAPES[scrape_job.query_term] = scrape_job
+# end
 
 Monkeyshines::RequestStream::BeanstalkQueue.class_eval do
   def job_queue_stats
@@ -76,6 +84,11 @@ Monkeyshines::RequestStream::BeanstalkQueue.class_eval do
 end
 
 begin
+  job_store.each do |hsh|
+    scrape_job = Twitter::Scrape::TwitterSearchJob.from_hash hsh
+    periodic_log.periodically{ [scrape_job] }
+    add_scrape_job scrape_job
+  end
   request_queue.scrub_all do |scrape_job|
     # archive the job under its query term
     add_scrape_job scrape_job
@@ -85,11 +98,7 @@ begin
     next if (scrape_job.query_term =~ /^#/) || (scrape_job.query_term.blank?)
     periodic_log.periodically{ [scrape_job] }
     add_scrape_job scrape_job
-  end
-  job_store.each do |hsh|
-    scrape_job = Twitter::Scrape::TwitterSearchJob.from_hash hsh
-    periodic_log.periodically{ [scrape_job] }
-    add_scrape_job scrape_job
+    SCRAPES[scrape_job.query_term].priority = scrape_job.priority if scrape_job.priority
   end
 rescue Exception => e
   warn e
@@ -97,7 +106,7 @@ ensure
   sorted = SCRAPES.sort_by{|term,scrape_job| [scrape_job.priority||65536, -(scrape_job.prev_rate||1440), term] }
   sorted.each do |term, scrape_job|
     puts scrape_job.to_flat[1..-1].join("\t")
-    job_store.save "#{scrape_job.class}-#{scrape_job.query_term}", scrape_job
+    job_store.save "#{scrape_job.class}-#{scrape_job.query_term}", scrape_job.to_hash.compact
   end
 end
 
