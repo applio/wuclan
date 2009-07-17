@@ -3,10 +3,10 @@ module Wuclan
     module Twitter
       module Scrape
         #
-        # ScrapeSession for the twitter Search API
+        # TwitterSearchJob for the twitter Search API
         #
         # * Manages a series of paginated requests from first result back to last item in
-        #   previous scrape session.
+        #   previous scrape scrape_job.
         #
         #
         class TwitterSearchJob < Struct.new(

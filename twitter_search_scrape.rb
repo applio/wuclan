@@ -20,16 +20,16 @@ opts = Trollop::options do
     :default => 60*60*4
   opt :handle,              "Handle to uniquely identify this scrape",
     :default => 'com.twitter.search'
-  opt :items_per_session,   "Desired item count per session",
+  opt :items_per_job,       "Desired item count per job",
     :default => 980
   opt :min_resched_delay,   "Don't run jobs more often than this (in seconds)",
     :default => 60*1
 end
 Trollop::die :dumpfile_dir unless opts[:dumpfile_dir]
 
-# Queue of request sessions, with reschedule requests
+# Queue of request scrape_jobs, with reschedule requests
 beanstalk_tube    = opts[:handle].gsub(/\w+/,'_')
-request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::Session, opts[:items_per_session], opts.slice(:min_resched_delay))
+request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay))
 # Scrape Store for completed requests
 dumpfile_pattern  = Monkeyshines::Utils::FilenamePattern.new(opts[:dumpfile_pattern], opts.slice(:handle, :dumpfile_dir))
 store             = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dumpfile_pattern, opts[:dumpfile_chunk_time].to_i
@@ -38,20 +38,20 @@ scraper           = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CO
 # Log every 60 seconds
 periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
 
-request_queue.each do |session|
+request_queue.each do |scrape_job|
   # Run through all pages for this search term
-  session.each_request do |req|
+  scrape_job.each_request do |req|
     # Make request
     response = scraper.get(req)
     # save it if successful
     store.save response if response
     # log progress
     periodic_log.periodically{ ["%7d"%response.num_items, response.url] }
-    # return it to the session for bookkeeping
+    # return it to the scrape_job for bookkeeping
     response
   end
   sleep 0.5
 end
 request_queue.finish
 
-# Twitter::Scrape::Session.hard_request_limit = 15
+# Twitter::Scrape::TwitterSearchJob.hard_request_limit = 15

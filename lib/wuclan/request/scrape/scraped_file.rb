@@ -9,7 +9,7 @@ module TwitterFriends
     #
     #
     class ScrapedFile < Struct.new(
-        :scrape_session, :context, :identifier, :page,
+        :scrape_job, :context, :identifier, :page,
         :scraped_at, :filename, :size, :moreinfo, :scrape_store )
       include ModelCommon
       include TwitterApi
@@ -85,30 +85,30 @@ module TwitterFriends
       def self.new_from_filename filename, size
         case
         when m = GROK_FILENAME_RE.match(filename)
-          scrape_session, resource, moreinfo, page, identifier, scraped_at = m.captures
+          scrape_job, resource, moreinfo, page, identifier, scraped_at = m.captures
           identifier = Addressable::URI.unencode_component(identifier)
           context    = context_for_resource(resource)
         when m = GROK_OLD_FILENAME_RE.match(filename)
-          scrape_session, resource, moreinfo, page, scraped_at = m.captures
+          scrape_job, resource, moreinfo, page, scraped_at = m.captures
           moreinfo   = Addressable::URI.unencode_component(moreinfo)
           identifier = ''
           context    = context_for_resource(resource)
         when m = GROK_BOGUS_FILENAME_RE.match(filename)
-          scrape_session, resource, moreinfo, page, scraped_at = m.captures
+          scrape_job, resource, moreinfo, page, scraped_at = m.captures
           moreinfo   = Addressable::URI.unencode_component(moreinfo)
           identifier = ''
           context    = context_for_resource(resource)
           bogus      = true
         when m = GROK_PUBLIC_TIMELINE_FILENAME_RE.match(filename)
-          scrape_session, scraped_at, *_ = m.captures
+          scrape_job, scraped_at, *_ = m.captures
           scraped_at.gsub!(/-/, '')
           identifier = scraped_at
           context, resource, page, moreinfo = ['public_timeline', 'public_timeline', 1, '']
         when
-          scrape_session, resource, identifier, page, scraped_at = m.captures
+          scrape_job, resource, identifier, page, scraped_at = m.captures
         else
           warn "Can't grok filename #{filename}";
-          scrape_session, resource, identifier, page, scraped_at = []
+          scrape_job, resource, identifier, page, scraped_at = []
           bogus      = true
         end
         #
@@ -116,7 +116,7 @@ module TwitterFriends
         # instantiate
         moreinfo ||= ''
         scraped_at.gsub!(/-/, '') if scraped_at
-        scraped_file = self.new scrape_session, context, identifier, page, scraped_at, filename, size, moreinfo
+        scraped_file = self.new scrape_job, context, identifier, page, scraped_at, filename, size, moreinfo
         scraped_file.bogus = bogus
         scraped_file
       end

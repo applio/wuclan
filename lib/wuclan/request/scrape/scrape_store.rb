@@ -25,11 +25,11 @@ module TwitterFriends
       def target
         case
         when m = %r{ripd-(\d{8})-(\d\d)-([\w-]+)}.match(tar_filename)
-          scrape_session, hour, resource_path = m.captures
-          "_com/_tw/com.twitter/_%s/_%s/%s" % [scrape_session, hour, resource_path.gsub(/-/, '/')]
+          scrape_job, hour, resource_path = m.captures
+          "_com/_tw/com.twitter/_%s/_%s/%s" % [scrape_job, hour, resource_path.gsub(/-/, '/')]
         when m = %r{public_timeline-(\d{6})-(\d\d)}.match(tar_filename)
-          scrape_session, day = m.captures
-          "public_timeline/%s/%s" % [scrape_session, day]
+          scrape_job, day = m.captures
+          "public_timeline/%s/%s" % [scrape_job, day]
         else raise "Can't grok #{tar_filename}"
         end
       end
@@ -81,9 +81,9 @@ module TwitterFriends
     # TAR_RE = %r{(public_timeline)-([\d-]+)(?:-partial)?\.tar\.bz2}
     # def tar_contents_dir tar_filename
     #   m = TAR_RE.match(tar_filename) or raise "Can't grok archive filename '#{tar_filename}'"
-    #   resource, scrape_session = m.captures
-    #   resource.gsub!(/\-/, '/') ; scrape_session.gsub!(/\-/, '/')
-    #   "#{resource}/#{scrape_session}"
+    #   resource, scrape_job = m.captures
+    #   resource.gsub!(/\-/, '/') ; scrape_job.gsub!(/\-/, '/')
+    #   "#{resource}/#{scrape_job}"
     # end
   end
 end

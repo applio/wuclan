@@ -26,9 +26,9 @@ opts = Trollop::options do
 end
 Trollop::die :dumpfile_dir unless opts[:dumpfile_dir]
 
-# Queue of request sessions, with reschedule requests
+# Queue of request jobs, with reschedule requests
 # opts[:beanstalk_tube] ||= opts[:handle].gsub(/\w+/,'_')
-request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::Session, opts[:items_per_session], opts.slice(:min_resched_delay)) # , :beanstalk_tube
+request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay)) # , :beanstalk_tube
 # Scrape Store for completed requests
 dumpfile_pattern  = Monkeyshines::Utils::FilenamePattern.new(opts[:dumpfile_pattern], opts.slice(:handle, :dumpfile_dir))
 store             = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dumpfile_pattern, opts[:dumpfile_chunk_time].to_i
@@ -38,7 +38,7 @@ scraper           = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CO
 periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
 
 
-class Session < Struct.new(
+class TwitterTrendingJob < Struct.new(
     :query_term,
     :priority,
     :period
@@ -55,19 +55,19 @@ end
 
 
 
-request_queue.each do |session|
+request_queue.each do |scrape_job|
   # Run through all pages for this search term
-  session.each_request do |req|
+  scrape_job.each_request do |req|
     # Make request
     response = scraper.get(req)
     # save it if successful
     store.save response if response
     # log progress
     periodic_log.periodically{ ["%7d"%response.num_items, response.url] }
-    # return it to the session for bookkeeping
+    # return it to the scrape_job for bookkeeping
     response
   end
 end
 request_queue.finish
 
-# Twitter::Scrape::Session.hard_request_limit = 15
+# Twitter::Scrape::Scrape_Job.hard_request_limit = 15
