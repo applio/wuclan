@@ -29,6 +29,8 @@ scraper         = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONF
 # Log every N requests
 periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 100, :time_interval => 10)
 
+# # Persist session jobs in distributed DB
+# store   = Monkeyshines::ScrapeStore::ReadThruStore.new_from_command_line opts
 
 Twitter::Scrape::Session.hard_request_limit = 5
 
