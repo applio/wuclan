@@ -24,7 +24,7 @@ opts = Trollop::options do
   opt :log,                 "File to store log", :type => String
 end
 Trollop::die :dumpfile_dir unless opts[:dumpfile_dir]
-Monkeyshines.logger = Logger.new File.open(opts[:log], 'a') if opts[:log]
+Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
 
 # Queue of request scrape_jobs, with reschedule requests
 beanstalk_tube    = opts[:handle].gsub(/\w+/,'_')
