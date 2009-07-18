@@ -13,20 +13,18 @@ require 'monkeyshines/utils/filename_pattern'
 # Command line options
 #
 opts = Trollop::options do
-  opt :dumpfile_dir,        "Filename base to store output. e.g. --dump_basename=/data/ripd", :type => String
-  opt :dumpfile_pattern,    "Pattern for dump file output",
-    :default => ":dumpfile_dir/:handle_prefix/:handle/:date/:handle+:datetime-:pid.tsv"
-  opt :dumpfile_chunk_time, "Frequency to rotate chunk files (in seconds)", :type => Integer,
-    :default => 60*60*4
-  opt :handle,              "Handle to uniquely identify this scrape",
-    :default => 'com.twitter.search'
-  opt :items_per_job,       "Desired item count per job",
-    :default => 980
-  opt :min_resched_delay,   "Don't run jobs more often than this (in seconds)",
-    :default => 60*1
-  opt :store_db,        "Tokyo tyrant db name",                              :type => String
+  opt :dumpfile_dir,        "Filename base to store output. e.g. --dump_basename=/data/ripd",        :type => String
+  opt :dumpfile_pattern,    "Pattern for dump file output",                     :default => ":dumpfile_dir/:handle_prefix/:handle/:date/:handle+:datetime-:pid.tsv"
+  opt :dumpfile_chunk_time, "Frequency to rotate chunk files (in seconds)",     :default => 60*60*4, :type => Integer
+  opt :handle,              "Handle to uniquely identify this scrape",          :default => 'com.twitter.search'
+  opt :items_per_job,       "Desired item count per job",                       :default => 980
+  opt :min_resched_delay,   "Don't run jobs more often than this (in seconds)", :default => 30*1
+  opt :store_db,            "Tokyo tyrant db host",                             :default => '',      :type => String
+  opt :store_db_port,       "Tokyo tyrant db port",                             :default => 1978,    :type => Integer
+  opt :log,                 "File to store log", :type => String
 end
 Trollop::die :dumpfile_dir unless opts[:dumpfile_dir]
+Monkeyshines.logger = Logger.new File.open(opts[:log], 'a') if opts[:log]
 
 # Queue of request scrape_jobs, with reschedule requests
 beanstalk_tube    = opts[:handle].gsub(/\w+/,'_')

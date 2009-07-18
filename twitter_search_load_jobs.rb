@@ -13,8 +13,8 @@ require 'monkeyshines/scrape_engine/http_scraper'
 # Command line options
 #
 opts = Trollop::options do
-  opt :from,             "Flat file of request parameters",                   :type => String
-  opt :store_db,        "Tokyo cabinet db name",                              :type => String
+  opt :from,     "Flat file of request parameters", :type => String
+  opt :store_db, "Tokyo cabinet db name",           :type => String
 end
 Trollop::die :from, "should give the class described in the --from file" unless opts[:from]
 
@@ -22,7 +22,6 @@ Trollop::die :from, "should give the class described in the --from file" unless 
 request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, 100) # 3-4 pages
 # Incoming requests from a flat file
 scrape_jobs = Monkeyshines::RequestStream::FlatFileRequestStream.new(opts[:from], Twitter::Scrape::TwitterSearchJob)
-
 # Scrape Store for completed requests
 store           = Monkeyshines::ScrapeStore::FlatFileStore.new opts[:dumpfile_pattern]
 # Scrape requests by HTTP
@@ -33,36 +32,21 @@ periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 10
 # Persist scrape_job jobs in distributed DB
 job_store   = Monkeyshines::ScrapeStore::KeyStore.new_from_command_line opts
 
-Twitter::Scrape::TwitterSearchJob.hard_request_limit = 5
-
+#
+# Keep one unique copy of each scrape_job.  The most senior instance (the one
+# with the highest prev_items) wins.
+#
 SCRAPES = { }
-
 def add_scrape_job scrape_job
   return if SCRAPES[scrape_job.query_term] &&
     (SCRAPES[scrape_job.query_term].prev_items.to_i >= scrape_job.prev_items.to_i)
   SCRAPES[scrape_job.query_term] = scrape_job
 end
 
-# def add_scrape_job scrape_job
-#   if SCRAPES[scrape_job.query_term]
-#     SCRAPES[scrape_job.query_term].priority = [SCRAPES[scrape_job.query_term].priority.to_i, scrape_job.priority.to_i].min
-#     if (SCRAPES[scrape_job.query_term].prev_items.to_i <= scrape_job.prev_items.to_i)
-#       SCRAPES[scrape_job.query_term] = scrape_job
-#     end
-#     # warn "Already have #{scrape_job.query_term}: #{SCRAPES[scrape_job.query_term]}"
-#     return
-#   end
-#   SCRAPES[scrape_job.query_term] = scrape_job
-# end
-
+#
+# Add an (extremely dangerous)
+#
 Monkeyshines::RequestStream::BeanstalkQueue.class_eval do
-  def job_queue_stats
-    job_queue.stats.select{|k,v| k =~ /jobs/} # .reject{|k,v| k=~/^cmd-/}
-  end
-  def job_queue_total_jobs
-    stats = job_queue.stats
-    [:reserved, :ready, :buried, :delayed].inject(0){|sum,type| sum += stats["current-jobs-#{type}"]}
-  end
   def scrub_all &block
     job_queue.connect()
     loop do
@@ -90,15 +74,16 @@ begin
     add_scrape_job scrape_job
   end
   request_queue.scrub_all do |scrape_job|
-    # archive the job under its query term
-    add_scrape_job scrape_job
+    # last recourse in case something goes wrong.
     $stderr.puts scrape_job.to_flat[1..-1].join("\t")
+    periodic_log.periodically{ [scrape_job] }
+    add_scrape_job scrape_job
   end
   scrape_jobs.each do |scrape_job|
     next if (scrape_job.query_term =~ /^#/) || (scrape_job.query_term.blank?)
     periodic_log.periodically{ [scrape_job] }
     add_scrape_job scrape_job
-    SCRAPES[scrape_job.query_term].priority = scrape_job.priority if scrape_job.priority
+    # SCRAPES[scrape_job.query_term].priority = scrape_job.priority if scrape_job.priority
   end
 rescue Exception => e
   warn e
