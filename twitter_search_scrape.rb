@@ -37,7 +37,7 @@ scraper           = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CO
 # Log every 60 seconds
 periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
 # Persist scrape_job jobs in distributed DB
-job_store   = Monkeyshines::ScrapeStore::KeyStore.new_from_command_line opts
+job_store   = Monkeyshines::ScrapeStore::TyrantTdbKeyStore.new_from_command_line opts
 
 request_queue.each do |scrape_job|
   # Run through all pages for this search term

@@ -30,7 +30,7 @@ scraper         = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONF
 periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 100, :time_interval => 10)
 
 # Persist scrape_job jobs in distributed DB
-job_store   = Monkeyshines::ScrapeStore::KeyStore.new_from_command_line opts
+job_store   = Monkeyshines::ScrapeStore::TyrantTdbKeyStore.new_from_command_line opts
 
 #
 # Keep one unique copy of each scrape_job.  The most senior instance (the one
@@ -68,7 +68,7 @@ Monkeyshines::RequestStream::BeanstalkQueue.class_eval do
 end
 
 begin
-  job_store.each do |hsh|
+  job_store.each do |key, hsh|
     scrape_job = Twitter::Scrape::TwitterSearchJob.from_hash hsh
     periodic_log.periodically{ [scrape_job] }
     add_scrape_job scrape_job
