@@ -39,16 +39,12 @@ module Wuclan
       # Make the data easier for batch flat-record processing
       #
 
-      # Format for date-string conversion
-      DATEFORMAT = "%Y%m%d%H%M%S"
       #
       # Convert date into flat, uniform format
       # This method is idempotent: repeated calls give same result.
       #
       def self.flatten_date dt
-        begin
-          DateTime.parse(dt.to_s).strftime(DATEFORMAT) if dt
-        rescue ; nil ; end
+        dt.to_flat
       end
 
       #

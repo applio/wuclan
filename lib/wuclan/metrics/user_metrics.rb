@@ -199,8 +199,8 @@ module Wuclan
         # [:age_user_scrape,   Integer , "How long since your user record was scraped",            ], #   x
         )
       SCRAPING_DAY_ZERO_STR = 20081201000000
-      SCRAPING_DAY_ZERO     = DateTime.parse(SCRAPING_DAY_ZERO_STR.to_s)
-      SINCE_DAY_ZERO        = DateTime.now - SCRAPING_DAY_ZERO
+      SCRAPING_DAY_ZERO     = DateTime.parse_safely(SCRAPING_DAY_ZERO_STR.to_s)
+      SINCE_DAY_ZERO        = DateTime.now.utc - SCRAPING_DAY_ZERO
 
       def fix!
         get_tw_day_bin

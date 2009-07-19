@@ -89,7 +89,7 @@ module Wuclan
         )
 
       SCRAPING_DAY_ZERO_STR = 20081201000000
-      SCRAPING_DAY_ZERO     = DateTime.parse(SCRAPING_DAY_ZERO_STR.to_s)
+      SCRAPING_DAY_ZERO     = DateTime.parse_safely(SCRAPING_DAY_ZERO_STR.to_s)
       SINCE_DAY_ZERO        = DateTime.now - SCRAPING_DAY_ZERO
 
       def to_a
