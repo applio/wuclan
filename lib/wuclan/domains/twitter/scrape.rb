@@ -1,5 +1,10 @@
-require 'monkeyshines/scrape_request'
-require 'monkeyshines/scrape_request/paginated'
-require 'monkeyshines/scrape_request/raw_json_contents'
-require 'wuclan/domains/twitter/scrape/twitter_search_request'
-require 'wuclan/domains/twitter/scrape/twitter_search_job'
+module Wuclan
+  module Domains
+    module Twitter
+      module Scrape
+        autoload :TwitterSearchRequest, 'wuclan/domains/twitter/scrape/twitter_search_request'
+        autoload :TwitterSearchJob,     'wuclan/domains/twitter/scrape/twitter_search_job'
+      end
+    end
+  end
+end

@@ -1,3 +1,6 @@
+require 'monkeyshines/scrape_request'
+require 'monkeyshines/scrape_request/paginated'
+require 'monkeyshines/scrape_request/raw_json_contents'
 module Wuclan
   module Domains
     module Twitter
