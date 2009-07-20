@@ -37,13 +37,13 @@ module Wuclan
       # Make the data easier for batch flat-record processing
       #
       def fix_raw!
-        raw['id']         = ModelCommon.zeropad_id(  raw['id'])
-        raw['created_at'] = ModelCommon.flatten_date(raw['created_at'])
-        raw['favorited']  = ModelCommon.unbooleanize(raw['favorited'])
-        raw['truncated']  = ModelCommon.unbooleanize(raw['truncated'])
-        raw['twitter_user_id']       = ModelCommon.zeropad_id(raw['twitter_user_id'] )
-        raw['in_reply_to_user_id']   = ModelCommon.zeropad_id(raw['in_reply_to_user_id'])   unless raw['in_reply_to_user_id'].blank?   || (raw['in_reply_to_user_id'].to_i   == 0)
-        raw['in_reply_to_status_id'] = ModelCommon.zeropad_id(raw['in_reply_to_status_id']) unless raw['in_reply_to_status_id'].blank? || (raw['in_reply_to_status_id'].to_i == 0)
+        raw['id']                     = ModelCommon.zeropad_id(  raw['id'])
+        raw['created_at']             = ModelCommon.flatten_date(raw['created_at'])
+        raw['favorited']              = ModelCommon.unbooleanize(raw['favorited'])
+        raw['truncated']              = ModelCommon.unbooleanize(raw['truncated'])
+        raw['twitter_user_id']        = ModelCommon.zeropad_id(raw['twitter_user_id'] )
+        raw['in_reply_to_user_id']    = ModelCommon.zeropad_id(raw['in_reply_to_user_id'])   unless raw['in_reply_to_user_id'].blank?   || (raw['in_reply_to_user_id'].to_i   == 0)
+        raw['in_reply_to_status_id']  = ModelCommon.zeropad_id(raw['in_reply_to_status_id']) unless raw['in_reply_to_status_id'].blank? || (raw['in_reply_to_status_id'].to_i == 0)
         Wukong.encode_components raw, 'text'
       end
 

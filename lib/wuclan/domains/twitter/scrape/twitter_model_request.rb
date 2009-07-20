@@ -1,71 +1,83 @@
 module Wuclan
-  module Request
-    class Base
-      cattr_accessor :resource_path
-      attr_accessor  :identifier, :page
+  module Domains
+    module Twitter
+      module Scrape
 
-      # Regular expression to grok resource from uri
-      GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json\?page=(\d+)}
+        # Effectively unlimited request maximum
+        NO_LIMIT = 2**31
 
-      #
-      def url
-        "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
+        #
+        # Base class for twitter API requests
+        #
+        class Base
+          class_inheritable_accessor :resource_path, :page_limit, :items_per_page
+          attr_accessor  :identifier, :page
+
+          # Contents are JSON
+          include RawJsonContents
+
+          #
+          # Regular expression to grok resource from uri
+          #                                resource_path  id  format          page           count
+          GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
+          #
+          # Generate request URL
+          #
+          def url
+            # This works for most of the twitter calls
+            "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
+          end
+        end
+
+        #
+        # API request for a user profile.
+        #
+        # Produces a TwitterUser,Profile,Style
+        #
+        # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
+        #
+        class UserRequest         < Wuclan::Domains::Twitter::Scrape::Base
+          self.resource_path   = 'users/show'
+          self.page_limit      = 1
+          self.items_per_page  = 1
+          def items_count(thing) 1 end
+        end
+
+        #
+        # API request for a user's status timeline.
+        # Maximum 16 pages, 200 a pop.
+        #
+        # Produces up to 200 Tweets.
+        #
+        # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-statuses-user_timeline
+        #
+        class UserTimelineRequest  < Wuclan::Domains::Twitter::Scrape::Base
+          self.resource_path  = 'statuses/user_timeline'
+          self.page_limit     = 16
+          self.items_per_page = 200
+          def items_count(thing) thing.status_count end
+          # This works for most of the twitter calls
+          def url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=#{items_per_page}"  end
+        end
+
+        # Don't use this -- get hosebird access.
+        class PublicTimelineRequest < Wuclan::Domains::Twitter::Scrape::Base
+          self.resource_path  = 'statuses/public_timeline'
+          self.page_limit     = 1
+          self.items_per_page = 600
+          def items_count(thing) 1 end
+          def url() "http://twitter.com/#{resource_path}.json"  end
+        end
+        # class HosebirdRequest     < Wuclan::Domains::Twitter::Scrape::Base
+        #   #self.resource_path = 'statuses/public_timeline'
+        # end
       end
 
-      #
-      # Threshold count-per-page and actual count to get number of expected pages.
-      # Cap the request with max
-      def self.pages_from_count per_page, count, max=nil
-        num = [ (count.to_f / per_page.to_f).ceil, 0 ].max
-        [num, max].compact.min
-      end
     end
-
-    class UserRequest < Wuclan::Request::Base
-      self.resource_path = 'users/show'
-      def pages(thing) self.class.pages_from_count(200, thing.statuses_count,   20) end
-    end
-    class FollowersRequest < Wuclan::Request::Base
-      self.resource_path = 'statuses/followers'
-      def pages(thing) self.class.pages_from_count(100, thing.followers_count,  10) end
-    end
-    class FriendsRequest < Wuclan::Request::Base
-      self.resource_path = 'statuses/friends'
-      def pages(thing) self.class.pages_from_count(100, thing.friends_count,    10) end
-    end
-    class FavoritesRequest < Wuclan::Request::Base
-      self.resource_path = 'favorites'
-      def pages(thing) self.class.pages_from_count( 20, thing.favourites_count, 20) end
-    end
-    class FollowersIdsRequest < Wuclan::Request::Base
-      self.resource_path = 'followers/ids'
-      def pages(thing) thing.followers_count == 0 ? 0 : 1 end
-      def url() "http://twitter.com/#{resource_path}/#{identifier}.json" end
-    end
-    class FriendsIdsRequest < Wuclan::Request::Base
-      self.resource_path = 'friends/ids'
-      def pages(thing) thing.friends_count   == 0 ? 0 : 1 end
-      def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
-    end
-    class UserTimelineRequest < Wuclan::Request::Base
-      self.resource_path = 'statuses/user_timeline'
-      def pages(thing) 1 end
-      def url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=200"   end
-    end
-    class PublicTimelineRequest < Wuclan::Request::Base
-      self.resource_path = 'statuses/public_timeline'
-      def pages(thing) 1 end
-      def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
-    end
-    # class HosebirdRequest < Wuclan::Request::Base
-    #   #self.resource_path = 'statuses/public_timeline'
-    # end
-    # class SearchRequest < Wuclan::Request::Base
-    #   def pages(thing) self.class.pages_from_count(100, 1500) end
-    # end
   end
-
 end
+end
+
 # language: http://en.wikipedia.org/wiki/ISO_639-1
 #
 # * Find tweets containing a word:         http://search.twitter.com/search.atom?q=twitter
