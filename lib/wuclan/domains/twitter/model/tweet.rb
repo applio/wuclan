@@ -6,15 +6,16 @@ module Wuclan::Models
   # Text and metadata for a twitter status update
   #
   class Tweet < TypedStruct.new(
-      [:id,                     Integer     ],
-      [:created_at,             Bignum      ],
-      [:twitter_user_id,        Integer     ],
-      [:favorited,              Integer     ],
-      [:truncated,              Integer     ],
-      [:in_reply_to_user_id,    Integer     ],
-      [:in_reply_to_status_id,  Integer     ],
-      [:text,                   String      ],
-      [:source,                 String      ]
+      [:id,                      Integer     ],
+      [:created_at,              Bignum      ],
+      [:twitter_user_id,         Integer     ],
+      [:favorited,               Integer     ],
+      [:truncated,               Integer     ],
+      [:in_reply_to_user_id,     Integer     ],
+      [:in_reply_to_status_id,   Integer     ],
+      [:text,                    String      ],
+      [:source,                  String      ],
+      [:in_reply_to_screen_name, String      ]
       )
     include ModelCommon
 

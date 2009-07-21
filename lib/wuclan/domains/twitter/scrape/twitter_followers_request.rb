@@ -17,8 +17,9 @@ module Wuclan
         #
         # This class handles all the complexity.
         #
+        #
+        #
         class HashOfUserAndTweet
-
 
           # Extracted JSON should be an array
           def healthy?()
@@ -57,7 +58,6 @@ module Wuclan
         end
 
 
-
         #
         # API request for the timeline from a user's followers.
         #
@@ -73,20 +73,19 @@ module Wuclan
           self.page_limit      = NO_LIMIT
           self.items_per_page  = 100
           def items_count(thing) thing.followers_count end
-
+          #
+          # unpacks the raw API response, yielding all the interesting objects
+          # and relationships within.
+          #
           def parse &block
+            return unless healthy?
             parsed_contents.each do |hsh|
-              #
-              json_obj = JsonTwitterUser.new(hsh, scraped_at)
+              json_obj = JsonUserWithTweet.new(hsh, 'scraped_at' => scraped_at)
               next unless json_obj && json_obj.healthy?
-              # Extract user, tweet and relationship
-              user_b          = json_obj.extract_user
-              tweet           = json_obj.extract_tweet
-              relationship    = AFollowsB.new(user_b.id, self.twitter_user_id)
               #
-              yield user_b       if user_b
-              yield tweet        if tweet
-              yield relationship if relationship
+              # Extract user, tweet and relationship
+              yield AFollowsB.new(json_obj.user.id, self.twitter_user_id) if json_obj.user
+              json_obj.each(&block)
             end
           end
         end
@@ -105,20 +104,19 @@ module Wuclan
           self.page_limit     = NO_LIMIT
           self.items_per_page = 100
           def items_count(thing) thing.friends_count end
-
+          #
+          # unpacks the raw API response, yielding all the interesting objects
+          # and relationships within.
+          #
           def parse &block
+            return unless healthy?
             parsed_contents.each do |hsh|
-              #
-              json_obj = JsonTwitterUser.new(hsh, scraped_at)
+              json_obj = JsonUserWithTweet.new(hsh, 'scraped_at' => scraped_at)
               next unless json_obj && json_obj.healthy?
-              # Extract user, tweet and relationship
-              user_b          = json_obj.extract_user
-              tweet           = json_obj.extract_tweet
-              relationship    = AFollowsB.new(self.twitter_user_id, user_b.id)
               #
-              yield user_b       if user_b
-              yield tweet        if tweet
-              yield relationship if relationship
+              # Extract user, tweet and relationship
+              yield AFollowsB.new(self.twitter_user_id, json_obj.user.id) if json_obj.user
+              json_obj.each(&block)
             end
           end
         end
@@ -138,21 +136,19 @@ module Wuclan
           self.page_limit     = NO_LIMIT
           self.items_per_page = 20
           def items_count(thing) thing.favourites_count end
-
           #
-          # unpacks the
+          # unpacks the raw API response, yielding all the interesting objects
+          # and relationships within.
           #
           def parse &block
+            return unless healthy?
             parsed_contents.each do |hsh|
-              #
-              json_obj = JsonTweet.new(hsh) or next
+              json_obj = JsonTweetWithUser.new(hsh, 'scraped_at' => scraped_at)
               next unless json_obj && json_obj.healthy?
               #
-              user_b       = json_obj.extract_user
-              tweet        = json_obj.extract_tweet
-              relationship = AFavoritesB.new(self.twitter_user_id, user_b.id, (tweet ? tweet.id : nil))
-              #
-              [user_b, tweet, relationship].flatten.compact.each{|obj| yield obj }
+              # Extract user, tweet and relationship
+              yield AFavoritesB.new(self.twitter_user_id, user_b.id, json_obj.tweet.id) if json_obj.user && json_obj.tweet
+              json_obj.each(&block)
             end
           end
         end

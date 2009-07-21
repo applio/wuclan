@@ -2,30 +2,20 @@ module Wuclan
   module Domains
     module Twitter
       module Scrape
-        # Effectively unlimited request maximum
-        NO_LIMIT = 2**31
 
         #
-        # Base class for twitter API requests
+        # API request for a user profile.
         #
-        class Base
-          class_inheritable_accessor :resource_path, :page_limit, :items_per_page
-          attr_accessor  :identifier, :page
-
-          # Contents are JSON
-          include RawJsonContents
-
-          #
-          # Regular expression to grok resource from uri
-          #                                resource_path  id  format          page           count
-          GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
-          #
-          # Generate request URL
-          #
-          def url
-            # This works for most of the twitter calls
-            "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
-          end
+        # Produces a TwitterUser,Profile,Style
+        #
+        # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
+        #
+        #
+        class UserRequest         < Wuclan::Domains::Twitter::Scrape::Base
+          self.resource_path   = 'users/show'
+          self.page_limit      = 1
+          self.items_per_page  = 1
+          def items_count(thing) 1 end
         end
 
       end

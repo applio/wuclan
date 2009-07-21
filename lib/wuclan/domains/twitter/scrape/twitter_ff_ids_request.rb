@@ -15,12 +15,15 @@ module Wuclan
           self.items_per_page = NO_LIMIT
           def items_count(thing) thing.followers_count == 0 ? 0 : 1 end
           def url() "http://twitter.com/#{resource_path}/#{identifier}.json" end
-          
+
           # followers_ids should be an array of user_ids
           def healthy?()
             parsed_contents && parsed_contents.is_a?(Array)
           end
 
+          #
+          # unpacks the raw API response, yielding all the relationships.
+          #
           def each &block
             parsed_contents.each do |user_b_id|
               user_b_id = "%010d"%user_b_id.to_i
@@ -42,16 +45,21 @@ module Wuclan
           self.items_per_page = NO_LIMIT
           def items_count(thing) thing.friends_count == 0 ? 0 : 1 end
           def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
-          
+
+          #
           # friends_ids should be an array of user_id's
+          #
           def healthy?()
             parsed_contents && parsed_contents.is_a?(Array)
           end
 
+          #
+          # unpacks the raw API response, yielding all the relationships.
+          #
           def each &block
             parsed_contents.each do |user_b_id|
               user_b_id = "%010d"%user_b_id.to_i
-              # B is a friend: user follows B 
+              # B is a friend: user follows B
               yield AFollowsB.new(user_a_id, user_b_id)
             end
           end
