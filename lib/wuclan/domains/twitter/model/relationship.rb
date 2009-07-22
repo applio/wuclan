@@ -1,4 +1,4 @@
-module Wuclan::Models
+module Wuclan::Domains::Twitter::Model
   # features common to all user-user relationships.
   module RelationshipBase
     module ClassMethods

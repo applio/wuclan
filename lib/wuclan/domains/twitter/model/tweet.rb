@@ -1,4 +1,4 @@
-module Wuclan::Models
+module Wuclan::Domains::Twitter::Model
 
   #
   # Tweet
@@ -27,7 +27,7 @@ module Wuclan::Models
     end
 
     # Key on id
-    def num_key_fields()  1  end
+    def num_key_fields()  1 end
     def numeric_id_fields()     [:id, :twitter_user_id, :in_reply_to_status_id, :in_reply_to_user_id] ; end
   end
 end

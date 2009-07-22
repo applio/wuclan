@@ -33,7 +33,7 @@ module Wuclan
           self.page_limit     = 16
           self.items_per_page = 200
           def items_count(thing) thing.status_count end
-          def url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=#{items_per_page}"  end
+          def make_url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=#{items_per_page}"  end
         end
 
         #
@@ -45,7 +45,7 @@ module Wuclan
           self.page_limit     = 1
           self.items_per_page = 600
           def items_count(thing) 1 end
-          def url() "http://twitter.com/#{resource_path}.json"  end
+          def make_url() "http://twitter.com/#{resource_path}.json"  end
         end
 
         # class HosebirdRequest     < Wuclan::Domains::Twitter::Scrape::Base

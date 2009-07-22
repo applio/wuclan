@@ -1,3 +1,6 @@
+require 'active_support/core_ext/duplicable'
+require 'active_support/core_ext/class/inheritable_attributes'
+require 'monkeyshines/scrape_request/raw_json_contents'
 module Wuclan
   module Domains
     module Twitter
@@ -8,12 +11,18 @@ module Wuclan
         #
         # Base class for twitter API requests
         #
-        class Base
+        class Base < Struct.new(
+            # :priority, :user_id, :page, :screen_name, 
+            :url,
+            :scraped_at,
+            :response_code, :response_message,
+            :contents
+            )
           class_inheritable_accessor :resource_path, :page_limit, :items_per_page
-          attr_accessor  :identifier, :page
+          attr_accessor  :identifier, :page, :twitter_user_id
 
           # Contents are JSON
-          include RawJsonContents
+          include Monkeyshines::RawJsonContents
 
           #
           # Regular expression to grok resource from uri
@@ -22,7 +31,7 @@ module Wuclan
           #
           # Generate request URL
           #
-          def url
+          def make_url
             # This works for most of the twitter calls
             "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
           end

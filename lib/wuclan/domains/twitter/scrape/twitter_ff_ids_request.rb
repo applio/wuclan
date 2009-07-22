@@ -14,7 +14,7 @@ module Wuclan
           self.page_limit     = 1
           self.items_per_page = NO_LIMIT
           def items_count(thing) thing.followers_count == 0 ? 0 : 1 end
-          def url() "http://twitter.com/#{resource_path}/#{identifier}.json" end
+          def make_url() "http://twitter.com/#{resource_path}/#{identifier}.json" end
 
           # followers_ids should be an array of user_ids
           def healthy?()
@@ -44,7 +44,7 @@ module Wuclan
           self.page_limit     = 1
           self.items_per_page = NO_LIMIT
           def items_count(thing) thing.friends_count == 0 ? 0 : 1 end
-          def url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
+          def make_url() "http://twitter.com/#{resource_path}/#{identifier}.json"  end
 
           #
           # friends_ids should be an array of user_id's
