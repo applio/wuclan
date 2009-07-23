@@ -1,6 +1,7 @@
 require 'wukong/encoding'
 module Wuclan::Domains::Twitter::Scrape
   class JsonUserTweetPair
+    include Wuclan::Domains::Twitter::Model
     attr_accessor :raw, :moreinfo
     def initialize raw, moreinfo
       self.raw = raw
@@ -10,15 +11,58 @@ module Wuclan::Domains::Twitter::Scrape
       # p ['new', self.class, raw, moreinfo]
     end
 
-    # def separate_user_and_tweet raw
-    #   raw_user  = raw
-    #   raw_tweet =
-    #   [raw_user, raw_tweet]
-    # end
-
+    # Extracted JSON should be an array
+    def healthy?()
+      raw && raw.is_a?(Hash) && (raw_tweet.nil? || raw_tweet.is_a?(Hash))
+    end
 
     #
-    # Make the data easier for batch flat-record processing
+    # generate all the contained TwitterXXX objects
+    #
+    def each
+      if is_partial?
+        yield user
+      else
+        yield user
+        yield user_profile
+        yield user_style
+      end
+      yield tweet if tweet
+    end
+
+    #
+    # Before mid-2009, most calls returned only the fields in
+    # TwitterUserPartial. After a mid-2009 API update, most calls return a full
+    # user record: TwitterUser, TwitterUserStyle and TwitterUserProfile
+    #
+    # This method tries to guess, based on the fields in the raw_user, which it has.
+    #
+    def is_partial?
+      not raw_user.include?('friends_count')
+    end
+
+
+    def tweet
+      Tweet.from_hash raw_tweet if raw_tweet
+    end
+
+    # create TwitterUser object from raw info
+    def user
+      if is_partial?
+        TwitterUserPartial.from_hash raw_user
+      else
+        TwitterUser.from_hash raw_user
+      end
+    end
+    def user_profile
+      TwitterUserProfile.from_hash raw_user
+    end
+    def user_style
+      TwitterUserStyle.from_hash raw_user
+    end
+
+    #
+    # Standardize the raw user hash's fields for further processing with Wukong
     #
     def fix_raw_user!
       return unless raw_user
@@ -36,8 +80,7 @@ module Wuclan::Domains::Twitter::Scrape
     end
 
     #
-    #
-    # Make the data easier for batch flat-record processing
+    # Standardize the raw tweet hash's fields for further processing with Wukong
     #
     def fix_raw_tweet!
       return unless raw_tweet
@@ -50,51 +93,6 @@ module Wuclan::Domains::Twitter::Scrape
       raw_tweet['in_reply_to_status_id']  = ModelCommon.zeropad_id(  raw_tweet['in_reply_to_status_id']) unless raw_tweet['in_reply_to_status_id'].blank? || (raw_tweet['in_reply_to_status_id'].to_i == 0)
       Wukong.encode_components raw_tweet, 'text', 'in_reply_to_screen_name'
     end
-
-    #
-    # Before mid-2009, most calls returned only the fields in
-    # TwitterUserPartial. After a mid-2009 API update, most calls return a full
-    # user record: TwitterUser, TwitterUserStyle and TwitterUserProfile
-    #
-    # This method tries to guess, based on the fields in the raw_user, which it has.
-    #
-    def is_partial?
-      not raw_user.include?('friends_count')
-    end
-    def tweet
-      Tweet.from_hash raw_tweet if raw_tweet
-    end
-
-    def user
-      if is_partial?
-        TwitterUserPartial.from_hash raw_user
-      else
-        TwitterUser.from_hash raw_user
-      end
-    end
-    def user_profile
-      TwitterUserProfile.from_hash raw_user
-    end
-    def user_style
-      TwitterUserStyle.from_hash raw_user
-    end
-
-    # Extracted JSON should be an array
-    def healthy?()
-      raw && raw.is_a?(Hash) && (raw_tweet.nil? || raw_tweet.is_a?(Hash))
-    end
-
-    def each
-      if is_partial?
-        yield user
-      else
-        yield user
-        yield user_profile
-        yield user_style
-      end
-      yield tweet if tweet
-    end
-
   end
 end
 

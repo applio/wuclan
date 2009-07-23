@@ -3,57 +3,6 @@ module Wuclan
     module Twitter
       module Scrape
 
-        # #
-        # # depending on the resource API responses can come back as either user,
-        # # with a contained tweet; or a tweet, with a contained user.
-        # #
-        # # also, sometimes this is a user+style+profile and sometimes a
-        # # user_partial.
-        # #
-        # # and sometimes the user's id is missing and has to be supplied from the
-        # # scrape_request.
-        # #
-        # # Finally, the record needs to be cleaned up and all that.
-        # #
-        # # This class handles all the complexity.
-        # #
-        # #
-        # #
-        # class HashOfUserAndTweet
-        #
-        #
-        #   def generate_relationship user, tweet
-        #     case context
-        #     when :followers then AFollowsB.new(  user.id,        owning_user_id)
-        #     when :friends   then AFollowsB.new(  owning_user_id, user.id)
-        #     when :favorites then AFavoritesB.new(owning_user_id, user.id, (tweet ? tweet.id : nil))
-        #     else raise "Can't make a relationship out of #{context}. Perhaps better communication is the key."
-        #     end
-        #   end
-        #
-        #   #
-        #   # Enumerate over users (each having one tweet)
-        #   #
-        #   def each &block
-        #     parsed_contents.each do |hsh|
-        #       case context
-        #       when :favorites then parsed = JsonTweet.new(      hsh, nil)
-        #       else                 parsed = JsonTwitterUser.new(hsh, scraped_at)
-        #       end
-        #       next unless parsed && parsed.healthy?
-        #       user_b = parsed.generate_user_partial
-        #       tweet  = parsed.generate_tweet
-        #       [ user_b,
-        #         tweet,
-        #         generate_relationship(user_b, tweet)
-        #       ].compact.each do |obj|
-        #         yield obj
-        #       end
-        #     end
-        #   end
-        # end
-
-
         #
         # API request for the timeline from a user's followers.
         #
