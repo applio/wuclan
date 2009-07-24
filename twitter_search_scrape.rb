@@ -55,4 +55,4 @@ request_queue.each do |scrape_job|
   job_store.save "#{scrape_job.class}-#{scrape_job.query_term}", scrape_job.to_hash.compact
   # sleep 0.5
 end
-request_queue.finish
+request_queue.close
