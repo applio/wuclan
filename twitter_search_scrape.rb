@@ -21,7 +21,7 @@ opts = Trollop::options do
   # output storage
   opt :chunk_time,     "Frequency to rotate chunk files (in seconds)", :type => Integer, :default => 60*60*4
   opt :dest_dir,       "Filename base to store output. e.g. --dump_basename=/data/ripd", :type => String
-  opt :dest_pattern,   "Pattern for dump file output",                 :default => ":dest_dir/:handle_prefix/:handle/:date/:handle+:timestamp-:pid.tsv"
+  opt :dest_pattern,   "Pattern for dump file output",                         :default => Monkeyshines::Utils::FilenamePattern::DEFAULT_PATTERN_STR
 end
 Trollop::die :dest_dir unless opts[:dest_dir]
 Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
