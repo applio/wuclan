@@ -3,7 +3,13 @@ module Wuclan
     module Twitter
       module Scrape
 
-        class TimelineRequest
+        class TimelineRequest < Wuclan::Domains::Twitter::Scrape::Base
+
+          # Extracted JSON should be an array
+          def healthy?()
+            parsed_contents && parsed_contents.is_a?(Array)
+          end
+
           #
           # unpacks the raw API response, yielding all the interesting objects
           # and relationships within.
@@ -28,7 +34,7 @@ module Wuclan
         #
         # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-statuses-user_timeline
         #
-        class UserTimelineRequest  < Wuclan::Domains::Twitter::Scrape::TimelineRequest
+        class TwitterUserTimelineRequest  < Wuclan::Domains::Twitter::Scrape::TimelineRequest
           self.resource_path  = 'statuses/user_timeline'
           self.page_limit     = 16
           self.items_per_page = 200
@@ -40,7 +46,7 @@ module Wuclan
         #
         # Not available any more after May 2009 -- use Hosebird
         #
-        class PublicTimelineRequest < Wuclan::Domains::Twitter::Scrape::TimelineRequest
+        class TwitterPublicTimelineRequest < Wuclan::Domains::Twitter::Scrape::TimelineRequest
           self.resource_path  = 'statuses/public_timeline'
           self.page_limit     = 1
           self.items_per_page = 600

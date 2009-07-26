@@ -13,5 +13,6 @@ end
 class Followers < TwitterFollowersRequest ; include OldSkoolRequest ; end
 class Friends   < TwitterFriendsRequest   ; include OldSkoolRequest ; end
 class Favorites < TwitterFavoritesRequest   ; include OldSkoolRequest ; end
+class UserTimeline < TwitterUserTimelineRequest   ; include OldSkoolRequest ; end
 
 end
