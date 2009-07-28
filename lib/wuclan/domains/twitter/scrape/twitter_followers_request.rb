@@ -28,7 +28,7 @@ module Wuclan
           # unpacks the raw API response, yielding all the interesting objects
           # and relationships within.
           #
-          def parse &block
+          def parse *args, &block
             return unless healthy?
             parsed_contents.each do |hsh|
               json_obj = JsonUserWithTweet.new(hsh, 'scraped_at' => scraped_at)
@@ -65,7 +65,7 @@ module Wuclan
           # unpacks the raw API response, yielding all the interesting objects
           # and relationships within.
           #
-          def parse &block
+          def parse *args, &block
             return unless healthy?
             parsed_contents.each do |hsh|
               json_obj = JsonUserWithTweet.new(hsh, 'scraped_at' => scraped_at)
@@ -103,7 +103,7 @@ module Wuclan
           # unpacks the raw API response, yielding all the interesting objects
           # and relationships within.
           #
-          def parse &block
+          def parse *args, &block
             return unless healthy?
             parsed_contents.each do |hsh|
               json_obj = JsonTweetWithUser.new(hsh, 'scraped_at' => scraped_at)

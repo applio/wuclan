@@ -11,13 +11,30 @@ module Wuclan
         # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
         #
         #
-        class UserRequest         < Wuclan::Domains::Twitter::Scrape::Base
+        class TwitterUserRequest         < Wuclan::Domains::Twitter::Scrape::Base
           self.resource_path   = 'users/show'
           self.page_limit      = 1
           self.items_per_page  = 1
           def items_count(thing) 1 end
-        end
 
+          # Extracted JSON should be a single user_with_tweet hash
+          def healthy?()
+            parsed_contents && parsed_contents.is_a?(Hash)
+          end
+
+          #
+          # unpacks the raw API response, yielding all the interesting objects
+          # and relationships within.
+          #
+          def parse *args, &block
+            return unless healthy?
+            json_obj = JsonUserWithTweet.new(parsed_contents, 'scraped_at' => scraped_at)
+            next unless json_obj && json_obj.healthy?
+            # Extract user and tweet
+            json_obj.each(&block)
+          end
+
+        end
       end
     end
   end

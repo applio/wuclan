@@ -10,19 +10,23 @@ include Wuclan::Domains::Twitter::Scrape
 include Wuclan::Domains::Twitter::Model
 # if you're anyone but original author this next require is useless but harmless.
 require 'wuclan/domains/twitter/scrape/old_skool_request_classes'
-# 
+#
 #
 # Instantiate each incoming request.
 # Stream out the contained classes it generates.
 #
-# 
+#
 class TwitterRequestParser < Wukong::Streamer::StructStreamer
-  def process request
-    request.parse do |obj|
-      yield obj
+
+  def process request, *args, &block
+    request.parse(*args) do |obj|
+      next if obj.is_a? BadRecord
+      yield obj.to_flat(false)
     end
   end
 end
+
+
 
 class TwitterRequestUniqer < Wukong::Streamer::UniqByLastReducer
   include Wukong::Streamer::StructRecordizer
@@ -48,12 +52,12 @@ class TwitterRequestUniqer < Wukong::Streamer::UniqByLastReducer
       raise "Don't know how to extract key from #{obj.class}"
     end
   end
-  
+
   def start! *args
     self.uniquer_count = 0
     super *args
   end
-  
+
   def accumulate obj
     self.uniquer_count      += 1
     self.final_value = [self.uniquer_count, obj.to_flat].flatten
