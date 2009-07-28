@@ -11,7 +11,7 @@ module FreqWholeCorpus
     #
     # extract just the word
     #
-    def process thing, &block
+    def process thing, *args, &block
       next unless thing.is_a? TweetToken
       yield thing.word
     end

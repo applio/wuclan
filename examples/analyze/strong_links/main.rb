@@ -19,7 +19,7 @@ end
 
 
 class Mapper < Wukong::Streamer::StructStreamer
-  def process thing
+  def process thing, *args
     case thing
     when AFollowsB, AAtsignsBId
       thing.both_edge_rels.each{|edge| yield edge }
