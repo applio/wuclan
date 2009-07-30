@@ -36,7 +36,15 @@ module Wuclan
           #
           def make_url
             # This works for most of the twitter calls
-            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}"
+            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"
+          end
+          def make_url!
+            self.url = make_url
+          end
+
+          BAD_CHARS = { "\r" => "&#13;", "\n" => "&#10;", "\t" => "&#9;" }
+          def response= response
+            self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
           end
         end
 
