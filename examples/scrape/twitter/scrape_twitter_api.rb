@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'monkeyshines'
-require 'monkeyshines/scraper/base'
+require 'monkeyshines/runner/base'
+require 'pathname'
 
 #
 #
@@ -9,6 +10,8 @@ require 'monkeyshines/scraper/base'
 require 'wuclan/domains/twitter'
 # un-namespace request classes.
 include Wuclan::Domains::Twitter::Scrape
+
+WORK_DIR = Pathname.new(File.dirname(__FILE__)+"/work").realpath.to_s
 
 # ===========================================================================
 #
@@ -32,8 +35,8 @@ opts = Trollop::options do
   # output storage
   opt :cache_loc,      "URI for cache server",                         :type => String, :default => ':10022'
   opt :chunk_time,     "Frequency to rotate chunk files (in seconds)", :type => Integer, :default => 60*60*4
-  opt :dest_dir,       "Filename base to store output. e.g. --dest_dir=/data/ripd", :type => String, :required => true
-  opt :dest_pattern,   "Pattern for dump file output",                 :default => ":dest_dir/:handle_prefix/:handle/:date/:handle+:timestamp-:pid.tsv"
+  opt :dest_dir,       "Filename base to store output. default ./work/ripd", :default => WORK_DIR+'/ripd'
+  opt :dest_pattern,   "Pattern for dump file output",                 :default => ":dest_dir/:date/:handle+:timestamp-:pid.tsv"
 
 end
 opts[:handle] ||= 'com.twitter'
@@ -41,6 +44,7 @@ scrape_config = YAML.load(File.open(ENV['HOME']+'/.monkeyshines'))
 opts.merge! scrape_config
 
 # ******************** Log ********************
+opts[:log] = (WORK_DIR+'/log/'+File.basename(opts[:from],'.tsv')+'.log') if (opts[:log]=='')
 Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
 periodic_log = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 10000, :time_interval => 30)
 
@@ -56,7 +60,7 @@ class TwitterRequestStream < Monkeyshines::RequestStream::Base
 end
 src_store = Monkeyshines::ScrapeStore::FlatFileStore.new_from_command_line(opts, :filemode => 'r')
 src_store.skip!(opts[:skip].to_i) if opts[:skip]
-request_stream = TwitterRequestStore.new src_store
+request_stream = TwitterRequestStream.new TwitterUserRequest, src_store
 
 #
 # ******************** Store output ********************
@@ -88,7 +92,7 @@ scraper = Monkeyshines::ScrapeEngine::HttpScraper.new opts[:twitter_api]
 # ******************** Do this thing ********************
 #
 Monkeyshines.logger.info "Beginning scrape itself"
-src_store.each do |req|
+request_stream.each do |req|
   # conditional store only calls scraper if url key is missing.
   result = dest_store.set(req.url) do
     response = scraper.get(req)                             # do the url fetch
