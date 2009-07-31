@@ -8,11 +8,16 @@ module Wuclan::Domains::Twitter::Model
     #
     # Key on id
     #
-    # For mutability (preserving different scraped_at observations)
-    # needs to be 2 -- id and scraped_at
-    #
     def num_key_fields()        1       end
-    def numeric_id_fields()     [:id] ; end
+
+    #
+    # Fields that can change value
+    #
+    def mutable_fields
+      # everything but 0 (id) and 1 (scraped_at)
+      to_a[2..-1]
+    end
+
     def decoded_name
       @decoded_name        ||= (name        ? name.wukong_decode        : '')
     end
@@ -22,6 +27,7 @@ module Wuclan::Domains::Twitter::Model
     def decoded_description
       @decoded_description ||= (description ? description.wukong_decode : '')
     end
+
   end
 
   #
