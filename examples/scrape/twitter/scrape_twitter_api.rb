@@ -11,7 +11,7 @@ require 'wuclan/domains/twitter'
 # un-namespace request classes.
 include Wuclan::Domains::Twitter::Scrape
 
-WORK_DIR = Pathname.new(File.dirname(__FILE__)+"/work").realpath.to_s
+WORK_DIR = Pathname.new(File.dirname(__FILE__)+"/rawd").realpath.to_s
 
 # ===========================================================================
 #
@@ -28,7 +28,7 @@ WORK_DIR = Pathname.new(File.dirname(__FILE__)+"/work").realpath.to_s
 #
 #
 opts = Trollop::options do
-  opt :log,            "Log file name; leave blank to use STDERR",     :type => String
+  opt :log,            "Log to file instead of STDERR"
   # input from file
   opt :from,           "URI for scrape store to load from",            :type => String
   opt :skip,           "Initial lines to skip",                        :type => Integer
@@ -44,9 +44,12 @@ scrape_config = YAML.load(File.open(ENV['HOME']+'/.monkeyshines'))
 opts.merge! scrape_config
 
 # ******************** Log ********************
-opts[:log] = (WORK_DIR+'/log/'+File.basename(opts[:from],'.tsv')+'.log') if (opts[:log]=='')
-Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
-periodic_log = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 10000, :time_interval => 30)
+if (opts[:log])
+  opts[:log] = (WORK_DIR+'/log/'+File.basename(opts[:from],'.tsv'))
+  Monkeyshines.logger = Logger.new(opts[:log]+'.log', 'daily')
+  $stdout = $stderr = File.open(opts[:log]+"-console.log", "a")
+end
+periodic_log = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 1, :time_interval => 30)
 
 #
 # ******************** Load from store ********************
