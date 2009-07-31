@@ -23,21 +23,28 @@ module Wuclan
 
           # Let us be peers with AFollowsB and TwitterUser and etc.
           include Wuclan::Domains::Twitter::Model
-
           # Contents are JSON
           include Monkeyshines::RawJsonContents
 
+          def initialize *args
+            super *args
+            make_url! if (! url)
+          end
+
           #
-          # Regular expression to grok resource from uri
-          #                                resource_path  id  format          page           count
-          GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
-          #
-          # Generate request URL
-          #
+          def healthy?
+            (! url.blank) && (            # has a URL and either:
+              scraped_at.blank?        || # hasn't been scraped,
+              (! response_code.blank?) || # or has, with response code
+              (! contents.blank?) )       # or has, with response
+          end
+
+          # Generate request URL from other attributes
           def make_url
             # This works for most of the twitter calls
-            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"
+            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}"
           end
+          # Set URL from other attributes
           def make_url!
             self.url = make_url
           end
@@ -46,6 +53,13 @@ module Wuclan
           def response= response
             self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
           end
+
+          # #
+          # # Regular expression to grok resource from uri
+          # #                                resource_path  id  format          page           count
+          # GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
+          # def self.from_url
+          # end
         end
 
       end

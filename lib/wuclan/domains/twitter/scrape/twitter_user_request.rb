@@ -22,6 +22,11 @@ module Wuclan
             parsed_contents && parsed_contents.is_a?(Hash)
           end
 
+          # Generate request URL
+          def make_url
+            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"
+          end
+
           #
           # unpacks the raw API response, yielding all the interesting objects
           # and relationships within.
