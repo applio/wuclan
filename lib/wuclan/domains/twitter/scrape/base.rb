@@ -1,5 +1,3 @@
-require 'active_support/core_ext/duplicable'
-require 'active_support/core_ext/class/inheritable_attributes'
 require 'monkeyshines/scrape_request/raw_json_contents'
 module Wuclan
   module Domains
@@ -11,19 +9,21 @@ module Wuclan
         #
         # Base class for twitter API requests
         #
-        class Base < Struct.new(
-            # :priority, :user_id, :page, :screen_name, 
-            :url,
-            :scraped_at,
-            :response_code, :response_message,
-            :contents
+        class Base < TypedStruct.new(
+            [:twitter_user_id,  Integer],
+            [:page,             Integer],
+            [:moreinfo,         String],
+            [:url,              String],
+            [:scraped_at,       Bignum],
+            [:response_code,    Integer],
+            [:response_message, String],
+            [:contents,         String]
             )
           class_inheritable_accessor :resource_path, :page_limit, :items_per_page
-          attr_accessor  :identifier, :page, :twitter_user_id
 
           # Let us be peers with AFollowsB and TwitterUser and etc.
-          include Wuclan::Domains::Twitter::Model         
-          
+          include Wuclan::Domains::Twitter::Model
+
           # Contents are JSON
           include Monkeyshines::RawJsonContents
 
@@ -36,7 +36,15 @@ module Wuclan
           #
           def make_url
             # This works for most of the twitter calls
-            "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}"
+            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"
+          end
+          def make_url!
+            self.url = make_url
+          end
+
+          BAD_CHARS = { "\r" => "&#13;", "\n" => "&#10;", "\t" => "&#9;" }
+          def response= response
+            self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
           end
         end
 

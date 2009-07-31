@@ -16,7 +16,7 @@ require 'monkeyshines/utils/filename_pattern'
 opts = Trollop::options do
   opt :dumpfile_dir,        "Filename base to store output. e.g. --dump_basename=/data/ripd", :type => String
   opt :dumpfile_pattern,    "Pattern for dump file output",
-    :default => ":dumpfile_dir/:handle_prefix/:handle/:date/:handle+:datetime-:pid.tsv"
+    :default => Monkeyshines::Utils::FilenamePattern::DEFAULT_PATTERN_STR
   opt :dumpfile_chunk_time, "Frequency to rotate chunk files (in seconds)", :type => Integer,
     :default => 60*60*24
   opt :handle,              "Handle to uniquely identify this scrape",

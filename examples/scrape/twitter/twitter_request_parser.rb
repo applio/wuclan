@@ -18,9 +18,11 @@ require 'wuclan/domains/twitter/scrape/old_skool_request_classes'
 #
 #
 class TwitterRequestParser < Wukong::Streamer::StructStreamer
-  def process request
-    request.parse do |obj|
-      yield obj
+
+  def process request, *args, &block
+    request.parse(*args) do |obj|
+      next if obj.is_a? BadRecord
+      yield obj.to_flat(false)
     end
   end
 end

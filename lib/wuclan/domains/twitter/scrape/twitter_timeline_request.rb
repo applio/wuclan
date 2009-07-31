@@ -14,7 +14,7 @@ module Wuclan
           # unpacks the raw API response, yielding all the interesting objects
           # and relationships within.
           #
-          def parse &block
+          def parse *args, &block
             return unless healthy?
             parsed_contents.each do |hsh|
               json_obj = JsonTweetWithUser.new(hsh, 'scraped_at' => scraped_at)
@@ -39,7 +39,7 @@ module Wuclan
           self.page_limit     = 16
           self.items_per_page = 200
           def items_count(thing) thing.status_count end
-          def make_url() "http://twitter.com/#{resource_path}/#{identifier}.json?page=#{page}&count=#{items_per_page}"  end
+          def make_url() "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}&count=#{items_per_page}"  end
         end
 
         #

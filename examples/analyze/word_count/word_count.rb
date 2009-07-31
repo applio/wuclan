@@ -13,7 +13,7 @@ module WordFreq
     # Extract all the semantic items (smilies, hashtags, etc)
     # and all the remaining words from each tweet
     #
-    def process thing, &block
+    def process thing, *args, &block
       next unless thing.is_a? Tweet
       # tokenize(true) to extract words as well as semantic tokens
       thing.tokenize(true).each do |token|
