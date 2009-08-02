@@ -61,7 +61,7 @@ class TwitterRequestStream < Monkeyshines::RequestStream::Base
     end
   end
 end
-src_store = Monkeyshines::ScrapeStore::FlatFileStore.new_from_command_line(opts, :filemode => 'r')
+src_store = Monkeyshines::Store::FlatFileStore.new_from_command_line(opts, :filemode => 'r')
 src_store.skip!(opts[:skip].to_i) if opts[:skip]
 request_stream = TwitterRequestStream.new TwitterUserRequest, src_store
 
@@ -70,25 +70,25 @@ request_stream = TwitterRequestStream.new TwitterUserRequest, src_store
 #
 # Track visited URLs with key-value database
 #
-dest_cache = Monkeyshines::ScrapeStore::TyrantHdbKeyStore.new(opts[:cache_loc])
+dest_cache = Monkeyshines::Store::TyrantRdbKeyStore.new(opts[:cache_loc])
 
 #
 # Store the data into flat files
 #
 dest_pattern = Monkeyshines::Utils::FilenamePattern.new(opts[:dest_pattern], :handle => opts[:handle], :dest_dir => opts[:dest_dir])
-dest_files   = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new(dest_pattern, opts[:chunk_time].to_i, opts)
+dest_files   = Monkeyshines::Store::ChunkedFlatFileStore.new(dest_pattern, opts[:chunk_time].to_i, opts)
 
 #
 # Conditional store uses the key-value DB to boss around the flat files --
 # requests are only made (and thus data is only output) if the url is missing
 # from the key-value store.
 #
-dest_store = Monkeyshines::ScrapeStore::ConditionalStore.new(dest_cache, dest_files)
+dest_store = Monkeyshines::Store::ConditionalStore.new(dest_cache, dest_files)
 
 #
-# ******************** Scraper ********************
+# ******************** Fetcher ********************
 #
-scraper = Monkeyshines::ScrapeEngine::HttpScraper.new opts[:twitter_api]
+fetcher = Monkeyshines::Fetcher::HttpFetcher.new opts[:twitter_api]
 
 
 #
@@ -96,13 +96,13 @@ scraper = Monkeyshines::ScrapeEngine::HttpScraper.new opts[:twitter_api]
 #
 Monkeyshines.logger.info "Beginning scrape itself"
 request_stream.each do |req|
-  # conditional store only calls scraper if url key is missing.
+  # conditional store only calls fetcher if url key is missing.
   result = dest_store.set(req.url) do
-    response = scraper.get(req)                             # do the url fetch
+    response = fetcher.get(req)                             # do the url fetch
     next unless response.healthy?                           # don't store bad fetches
     [response.scraped_at, response]                         # timestamp into cache, result into flat file
   end
   periodic_log.periodically{ ["%7d"%dest_store.misses, 'misses', dest_store.size, req.response_code, result, req.url] }
 end
 dest_store.close
-scraper.close
+fetcher.close
