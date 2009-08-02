@@ -82,7 +82,7 @@ module TwitterFriends
         | cli.gs                        #   19700
         | budurl.com                    #   19402
         | xrl.us                        #   11621
-        # | tiny.cc                     #    9140  # tiny.cc borks scraper
+        # | tiny.cc                     #    9140  # tiny.cc borks fetcher
         | zi.ma                         #    8148
         | s3nt.com                      #    6922
         | ow.ly                         #    6848

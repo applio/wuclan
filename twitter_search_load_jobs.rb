@@ -8,7 +8,7 @@ require 'monkeyshines'
 #
 require 'wuclan/domains/twitter/scrape' ; include Wuclan::Domains
 require 'monkeyshines/utils/uri'
-require 'monkeyshines/scrape_engine/http_scraper'
+require 'monkeyshines/fetcher/http_fetcher'
 #
 # Command line options
 #
@@ -31,15 +31,15 @@ Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
 beanstalk_tube  = opts[:handle].gsub(/\w+/,'_')
 request_queue   = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay))
 # Scrape requests by HTTP
-scraper         = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONFIG[:twitter]
+fetcher         = Monkeyshines::Fetcher::HttpFetcher.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
 periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
 # Persist scrape_job jobs in distributed DB
-job_store       = Monkeyshines::ScrapeStore::TyrantTdbKeyStore.new(opts[:job_db])
+job_store       = Monkeyshines::Store::TyrantTdbKeyStore.new(opts[:job_db])
 
 # Import
 if opts[:from]
-  import_jobs = Monkeyshines::ScrapeStore::FlatFileStore.new(opts[:from], :filemode => 'r')
+  import_jobs = Monkeyshines::Store::FlatFileStore.new(opts[:from], :filemode => 'r')
 end
 
 #

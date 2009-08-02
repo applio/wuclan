@@ -7,7 +7,7 @@ require 'wukong'
 require 'monkeyshines'
 require 'wuclan/domains/twitter/scrape' ; include Wuclan::Domains
 
-require 'monkeyshines/scrape_engine/http_scraper'
+require 'monkeyshines/fetcher/http_fetcher'
 require 'monkeyshines/utils/filename_pattern'
 
 #
@@ -31,9 +31,9 @@ Trollop::die :dumpfile_dir unless opts[:dumpfile_dir]
 request_queue     = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay)) # , :beanstalk_tube
 # Scrape Store for completed requests
 dumpfile_pattern  = Monkeyshines::Utils::FilenamePattern.new(opts[:dumpfile_pattern], opts.slice(:handle, :dumpfile_dir))
-store             = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dumpfile_pattern, opts[:dumpfile_chunk_time].to_i
+store             = Monkeyshines::Store::ChunkedFlatFileStore.new dumpfile_pattern, opts[:dumpfile_chunk_time].to_i
 # Scrape requests by HTTP
-scraper           = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONFIG[:twitter]
+fetcher           = Monkeyshines::Fetcher::HttpFetcher.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
 periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
 
@@ -59,7 +59,7 @@ request_queue.each do |scrape_job|
   # Run through all pages for this search term
   scrape_job.each_request do |req|
     # Make request
-    response = scraper.get(req)
+    response = fetcher.get(req)
     # save it if successful
     store.save response if response
     # log progress

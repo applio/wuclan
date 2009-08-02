@@ -7,7 +7,7 @@ require 'wukong'
 require 'monkeyshines'
 require 'wuclan/domains/twitter/scrape' ; include Wuclan::Domains
 
-require 'monkeyshines/scrape_engine/http_scraper'
+require 'monkeyshines/fetcher/http_fetcher'
 require 'monkeyshines/utils/filename_pattern'
 #
 # Command line options
@@ -31,19 +31,19 @@ beanstalk_tube  = opts[:handle].gsub(/\w+/,'_')
 request_queue   = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay))
 # Scrape Store for completed requests
 dest_pattern    = Monkeyshines::Utils::FilenamePattern.new(opts[:dest_pattern], opts.slice(:handle, :dest_dir))
-dest            = Monkeyshines::ScrapeStore::ChunkedFlatFileStore.new dest_pattern, opts[:chunk_time].to_i
+dest            = Monkeyshines::Store::ChunkedFlatFileStore.new dest_pattern, opts[:chunk_time].to_i
 # Scrape requests by HTTP
-scraper         = Monkeyshines::ScrapeEngine::HttpScraper.new Monkeyshines::CONFIG[:twitter]
+fetcher         = Monkeyshines::Fetcher::HttpFetcher.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
 periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
 # Persist scrape_job jobs in distributed DB
-job_store       = Monkeyshines::ScrapeStore::TyrantTdbKeyStore.new(opts[:job_db])
+job_store       = Monkeyshines::Store::TyrantTdbKeyStore.new(opts[:job_db])
 
 request_queue.each do |scrape_job|
   # Run through all pages for this search term
   scrape_job.each_request do |req|
     # Fetch request
-    response = scraper.get(req)
+    response = fetcher.get(req)
     # save it if successful
     dest.save response if response
     # log progress

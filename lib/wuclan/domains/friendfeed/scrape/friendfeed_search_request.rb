@@ -40,7 +40,7 @@
 
 
 
-# class FriendFeedSearchScraper
+# class FriendFeedSearchFetcher
 #   def search_url query, page, max_id
 #     start = (page-1)*100
 #     %Q{http://friendfeed.com/api/feed/search?q=#{query}&service=twitter&start=#{start}&num=100}
