@@ -41,7 +41,7 @@ module Wuclan
             url_str = base_url
             url_str << "&rpp=#{items_per_page}"
             url_str << "&max_id=#{unscraped_span.max-1}" if unscraped_span.max
-            Wuclan::Domains::Twitter::Scrape::TwitterSearchRequest.new url_str
+            Wuclan::Twitter::Scrape::TwitterSearchRequest.new url_str
           end
 
           #

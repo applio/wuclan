@@ -1,4 +1,4 @@
-module Wuclan::Domains::Twitter::Scrape
+module Wuclan::Twitter::Scrape
   #
   # Older versions of wuclan had a slightly different request naming scheme, and
   # had additional specialized fields. This module adapts old to new; you're only

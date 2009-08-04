@@ -22,7 +22,7 @@ module Wuclan
           class_inheritable_accessor :resource_path, :page_limit, :items_per_page
 
           # Let us be peers with AFollowsB and TwitterUser and etc.
-          include Wuclan::Domains::Twitter::Model
+          include Wuclan::Twitter::Model
           # Contents are JSON
           include Monkeyshines::RawJsonContents
 

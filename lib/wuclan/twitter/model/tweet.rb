@@ -1,4 +1,4 @@
-module Wuclan::Domains::Twitter::Model
+module Wuclan::Twitter::Model
 
   #
   # Tweet

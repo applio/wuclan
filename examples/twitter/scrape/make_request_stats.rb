@@ -4,18 +4,18 @@ require 'wukong'
 require 'monkeyshines'
 require 'wuclan/domains/twitter'
 $: << '/home/flip/ics/rubygems/json-1.1.7/lib'
-include Wuclan::Domains::Twitter::Scrape
-include Wuclan::Domains::Twitter::Model
+include Wuclan::Twitter::Scrape
+include Wuclan::Twitter::Model
 
 
 require 'wukong/schema'
 
 
-Wuclan::Domains::Twitter::Scrape::Base.class_eval do
+Wuclan::Twitter::Scrape::Base.class_eval do
   extend Wukong::Schema
 end
 
-p Wuclan::Domains::Twitter::Scrape::TwitterUserRequest.pig_load
+p Wuclan::Twitter::Scrape::TwitterUserRequest.pig_load
 
 # Requests = LOAD 'ripd/com.tw/com.twitter/*' AS ( rsrc:chararray, priority:int, twitter_user_id: int, page: int, moreinfo: chararray, url: chararray, scraped_at: long, response_code: int, response_message: chararray, contents: chararray );
 # request_classes = FOREACH Requests GENERATE rsrc, (int) ((double)scraped_at / 1000000.0) AS scon, response_code ;

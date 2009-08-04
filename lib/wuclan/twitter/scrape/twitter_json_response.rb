@@ -1,7 +1,7 @@
 require 'wukong/encoding'
-module Wuclan::Domains::Twitter::Scrape
+module Wuclan::Twitter::Scrape
   class JsonUserTweetPair
-    include Wuclan::Domains::Twitter::Model
+    include Wuclan::Twitter::Model
     attr_accessor :raw, :moreinfo
     def initialize raw, moreinfo
       self.raw = raw

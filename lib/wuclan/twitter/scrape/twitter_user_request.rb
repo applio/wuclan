@@ -11,7 +11,7 @@ module Wuclan
         # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
         #
         #
-        class TwitterUserRequest         < Wuclan::Domains::Twitter::Scrape::Base
+        class TwitterUserRequest         < Wuclan::Twitter::Scrape::Base
           self.resource_path   = 'users/show'
           self.page_limit      = 1
           self.items_per_page  = 1

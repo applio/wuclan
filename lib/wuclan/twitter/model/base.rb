@@ -1,5 +1,5 @@
 require 'date'
-module Wuclan::Domains::Twitter::Model
+module Wuclan::Twitter::Model
   module ModelCommon
 
     #

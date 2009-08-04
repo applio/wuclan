@@ -1,5 +1,5 @@
 
-module Wuclan::Domains::Twitter::Model
+module Wuclan::Twitter::Model
 
   #
   # Mixin: common methods for each of the user representations / partitions

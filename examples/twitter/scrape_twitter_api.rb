@@ -9,7 +9,7 @@ require 'pathname'
 #
 require 'wuclan/domains/twitter'
 # un-namespace request classes.
-include Wuclan::Domains::Twitter::Scrape
+include Wuclan::Twitter::Scrape
 
 WORK_DIR = Pathname.new(File.dirname(__FILE__)+"/rawd").realpath.to_s
 

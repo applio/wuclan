@@ -6,8 +6,8 @@ require 'wukong'
 require 'monkeyshines'
 require 'wuclan/domains/twitter'
 # un-namespace request classes.
-include Wuclan::Domains::Twitter::Scrape
-include Wuclan::Domains::Twitter::Model
+include Wuclan::Twitter::Scrape
+include Wuclan::Twitter::Model
 # if you're anyone but original author this next require is useless but harmless.
 require 'wuclan/domains/twitter/scrape/old_skool_request_classes'
 

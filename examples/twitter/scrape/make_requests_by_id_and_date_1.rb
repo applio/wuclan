@@ -4,8 +4,8 @@ require 'wukong'
 require 'monkeyshines'
 require 'wuclan/domains/twitter'
 # un-namespace request classes.
-include Wuclan::Domains::Twitter::Scrape
-include Wuclan::Domains::Twitter::Model
+include Wuclan::Twitter::Scrape
+include Wuclan::Twitter::Model
 # if you're anyone but original author this next require is useless but harmless.
 require 'wuclan/domains/twitter/scrape/old_skool_request_classes'
 
@@ -63,7 +63,7 @@ Wukong::Script.new(
 #     1588  503
 #     2479  504
 
-# Wuclan::Domains::Twitter::Scrape::Base.class_eval do class_inheritable_accessor :req_code ; end
+# Wuclan::Twitter::Scrape::Base.class_eval do class_inheritable_accessor :req_code ; end
 # TwitterUserRequest.class_eval         do self.req_code = :tw_user ; end
 # TwitterFollowersRequest.class_eval    do self.req_code = :tw_foll ; end
 # TwitterFriendsRequest.class_eval      do self.req_code = :tw_frnd ; end

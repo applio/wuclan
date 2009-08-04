@@ -13,7 +13,7 @@ module Wuclan
         #
         # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-statuses%C2%A0followers
         #
-        class TwitterFollowersRequest    < Wuclan::Domains::Twitter::Scrape::Base
+        class TwitterFollowersRequest    < Wuclan::Twitter::Scrape::Base
           self.resource_path   = 'statuses/followers'
           self.page_limit      = NO_LIMIT
           self.items_per_page  = 100
@@ -50,7 +50,7 @@ module Wuclan
         #
         # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-statuses%C2%A0friends
         #
-        class TwitterFriendsRequest      < Wuclan::Domains::Twitter::Scrape::Base
+        class TwitterFriendsRequest      < Wuclan::Twitter::Scrape::Base
           self.resource_path  = 'statuses/friends'
           self.page_limit     = NO_LIMIT
           self.items_per_page = 100
@@ -88,7 +88,7 @@ module Wuclan
         #
         # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-favorites
         #
-        class TwitterFavoritesRequest    < Wuclan::Domains::Twitter::Scrape::Base
+        class TwitterFavoritesRequest    < Wuclan::Twitter::Scrape::Base
           self.resource_path  = 'favorites'
           self.page_limit     = NO_LIMIT
           self.items_per_page = 20
