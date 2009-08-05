@@ -1,68 +1,66 @@
 require 'monkeyshines/scrape_request/raw_json_contents'
 module Wuclan
-  module Domains
-    module Twitter
-      module Scrape
-        # Effectively unlimited request maximum
-        NO_LIMIT = 2**31
+  module Twitter
+    module Scrape
+      # Effectively unlimited request maximum
+      NO_LIMIT = 2**31
 
-        #
-        # Base class for twitter API requests
-        #
-        class Base < TypedStruct.new(
-            [:twitter_user_id,  Integer],
-            [:page,             Integer],
-            [:moreinfo,         String],
-            [:url,              String],
-            [:scraped_at,       Bignum],
-            [:response_code,    Integer],
-            [:response_message, String],
-            [:contents,         String]
-            )
-          class_inheritable_accessor :resource_path, :page_limit, :items_per_page
+      #
+      # Base class for twitter API requests
+      #
+      class Base < TypedStruct.new(
+          [:twitter_user_id,  Integer],
+          [:page,             Integer],
+          [:moreinfo,         String],
+          [:url,              String],
+          [:scraped_at,       Bignum],
+          [:response_code,    Integer],
+          [:response_message, String],
+          [:contents,         String]
+          )
+        class_inheritable_accessor :resource_path, :page_limit, :items_per_page
 
-          # Let us be peers with AFollowsB and TwitterUser and etc.
-          include Wuclan::Twitter::Model
-          # Contents are JSON
-          include Monkeyshines::RawJsonContents
+        # Let us be peers with AFollowsB and TwitterUser and etc.
+        include Wuclan::Twitter::Model
+        # Contents are JSON
+        include Monkeyshines::RawJsonContents
 
-          def initialize *args
-            super *args
-            make_url! if (! url)
-          end
-
-          #
-          def healthy?
-            (! url.blank) && (            # has a URL and either:
-              scraped_at.blank?        || # hasn't been scraped,
-              (! response_code.blank?) || # or has, with response code
-              (! contents.blank?) )       # or has, with response
-          end
-
-          # Generate request URL from other attributes
-          def make_url
-            # This works for most of the twitter calls
-            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}"
-          end
-          # Set URL from other attributes
-          def make_url!
-            self.url = make_url
-          end
-
-          BAD_CHARS = { "\r" => "&#13;", "\n" => "&#10;", "\t" => "&#9;" }
-          def response= response
-            self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
-          end
-
-          # #
-          # # Regular expression to grok resource from uri
-          # #                                resource_path  id  format          page           count
-          # GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
-          # def self.from_url
-          # end
+        def initialize *args
+          super *args
+          make_url! if (! url)
         end
 
+        #
+        def healthy?
+          (! url.blank) && (            # has a URL and either:
+            scraped_at.blank?        || # hasn't been scraped,
+            (! response_code.blank?) || # or has, with response code
+            (! contents.blank?) )       # or has, with response
+        end
+
+        # Generate request URL from other attributes
+        def make_url
+          # This works for most of the twitter calls
+          "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}"
+        end
+        # Set URL from other attributes
+        def make_url!
+          self.url = make_url
+        end
+
+        BAD_CHARS = { "\r" => "&#13;", "\n" => "&#10;", "\t" => "&#9;" }
+        def response= response
+          self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
+        end
+
+        # #
+        # # Regular expression to grok resource from uri
+        # #                                resource_path  id  format          page           count
+        # GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
+        # def self.from_url
+        # end
       end
+
     end
   end
 end

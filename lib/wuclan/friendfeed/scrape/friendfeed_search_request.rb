@@ -1,5 +1,4 @@
 # module Wuclan
-#   module Domains
 #     module Twitter
 #       module Scrape
 #         #

@@ -1,45 +1,43 @@
 module Wuclan
-  module Domains
-    module Twitter
-      module Scrape
+  module Twitter
+    module Scrape
 
-        #
-        # API request for a user profile.
-        #
-        # Produces a TwitterUser,Profile,Style
-        #
-        # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
-        #
-        #
-        class TwitterUserRequest         < Wuclan::Twitter::Scrape::Base
-          self.resource_path   = 'users/show'
-          self.page_limit      = 1
-          self.items_per_page  = 1
-          def items_count(thing) 1 end
+      #
+      # API request for a user profile.
+      #
+      # Produces a TwitterUser,Profile,Style
+      #
+      # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
+      #
+      #
+      class TwitterUserRequest         < Wuclan::Twitter::Scrape::Base
+        self.resource_path   = 'users/show'
+        self.page_limit      = 1
+        self.items_per_page  = 1
+        def items_count(thing) 1 end
 
-          # Extracted JSON should be a single user_with_tweet hash
-          def healthy?()
-            parsed_contents && parsed_contents.is_a?(Hash)
-          end
-
-          # Generate request URL
-          def make_url
-            "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"
-          end
-
-          #
-          # unpacks the raw API response, yielding all the interesting objects
-          # and relationships within.
-          #
-          def parse *args, &block
-            return unless healthy?
-            json_obj = JsonUserWithTweet.new(parsed_contents, 'scraped_at' => scraped_at)
-            next unless json_obj && json_obj.healthy?
-            # Extract user and tweet
-            json_obj.each(&block)
-          end
-
+        # Extracted JSON should be a single user_with_tweet hash
+        def healthy?()
+          parsed_contents && parsed_contents.is_a?(Hash)
         end
+
+        # Generate request URL
+        def make_url
+          "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"
+        end
+
+        #
+        # unpacks the raw API response, yielding all the interesting objects
+        # and relationships within.
+        #
+        def parse *args, &block
+          return unless healthy?
+          json_obj = JsonUserWithTweet.new(parsed_contents, 'scraped_at' => scraped_at)
+          next unless json_obj && json_obj.healthy?
+          # Extract user and tweet
+          json_obj.each(&block)
+        end
+
       end
     end
   end
