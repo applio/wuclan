@@ -1,0 +1,203 @@
+|    |_.Open Social          |_.Twitter                 |_.MySpace              |_.Friendster           |_.Last.fm              |_.Facebook             |_.Github               |_.Delicious            |_.StackOverflow        |_.Infochimps           |
+| xx |                       |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 01 | S scraped_at          | scraped_at               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 02 | S id                  | id                       |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 03 | S name                | name                     |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 04 | S                     | protected                |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 05 | S nickname            | screen_name              |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 06 | S preferredUsername   |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 07 | S published           | created_at               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 08 | S updated             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 09 | S utcOffset           | utc_offset               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 10 | S                     | time_zone                |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 11 | P tags                |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 12 ||                                                                                                                                                                                                                                                    
+| 13 | S aboutMe             | description              |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 14 | S currentLocation     | location                 |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 15 | S drinker             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 16 | S ethnicity           |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 17 | S connected           |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 18 | S displayName         | @screen_name             |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 19 | S gender              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 20 ||                                                                                                                                                                                                                                                    
+| 21 | C relationships       | !AFollowsB               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 22 | S                     | followers_count          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 23 | S                     | friends_count            |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 24 ||                                                                                                                                                                                                                                                    
+| 25 | C                     | !Tweet                   |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 26 | S                     | statuses_count           |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 27 | S                     | tweet_url                |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 28 | S                     | tweet_hashtag            |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 29 | S                     | tweet_smiley             |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 30 ||                                                                                                                                                                                                                                                    
+| 31 | C                     | !AFavoritesB             |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 32 | S                     | favourites_count         |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 33 ||                                                                                                                                                                                                                                                    
+| 34 | C                     | !ARepliesB               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 34 | C                     | !AAtsignsB               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 35 | C                     | !ARetweetsB              |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 36 ||                                                                                                                                                                                                                                                    
+| 37 | P photos              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 38 | S                     | background_color         |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 39 | S                     | text_color               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 40 | S                     | link_color               |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 41 | S                     | sidebar_border_color     |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 42 | S                     | sidebar_fill_color       |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 43 | S                     | background_tile          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 44 | S                     | background_image_url     |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 45 | S                     | image_url                |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 46 ||                                                                                                                                                                                                                                                    
+| 47 | S note                |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 48 | S bodyType            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 49 | S fashion             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 50 | S happiestWhen        |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 51 | S humor               |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 52 | S livingArrangement   |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 53 | S lookingFor          |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 54 | S profileSong         |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 55 | S profileVideo        |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 56 | S relationshipStatus  |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 57 | S religion            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 58 | S romance             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 59 | S scaredOf            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 60 | S sexualOrientation   |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 61 | S smoker              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 62 | S status              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 63 | S anniversary         |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 64 | S birthday            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 65 ||                                                                                                                                                                                                                                                    
+| 66 | P emails              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 67 | P urls                | [url]                    |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 68 | P phoneNumbers        |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 69 | P ims                 |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 70 | P addresses           |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 71 | P organizations       |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 72 | P accounts            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 73 | P appdata             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 74 | P activities          |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 75 | P books               |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 76 | P cars                |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 77 | P children            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 78 | P food                |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 79 | P heroes              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 80 | P interests           |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 81 | P jobInterests        |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 82 | P languages           |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 83 | P languagesSpoken     |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 84 | P movies              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 85 | P music               |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 86 | P pets                |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 87 | P politicalViews      |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 88 | P quotes              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 89 | P sports              |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 90 | P turnOffs            |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 91 | P turnOns             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+| 92 | P tvShows             |                          |                       |                       |                       |                       |                       |                       |                       |                       |  
+
+
+
+
+
+
+
+
+
+01
+02
+03
+04
+05
+06
+07
+08
+09
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99

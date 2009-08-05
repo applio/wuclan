@@ -1,0 +1,383 @@
+h2. All Models
+
+Activity
+Address
+Album
+BodyType
+Email
+Enum
+Environment
+EscapeType
+IdSpec
+MediaItem
+Message
+MessageCollection
+Name
+Organization
+Person
+Phone
+Url
+
+h3. Activity
+
+* The following fields are defined, based on their specification in the OpenSocial JavaScript apis: appId, body, bodyId, externalId, id, mediaItems, postedTime, priority, streamFaviconUrl, streamSourceUrl, streamTitle, streamUrl, templateParams, title, url, userId.
+
+2.01 app_id
+2.02 body
+2.03 body_id
+2.04 external_id
+2.05 id
+2.06 media_items
+2.07 posted_time
+2.08 priority
+2.09 stream_favicon_url
+2.10 stream_source_url
+2.11 stream_title
+2.12 stream_url
+2.13 template_params
+2.14 title
+2.15 title_id
+2.16 url
+2.17 user_id
+
+h3. Address
+
+2.01 country
+2.02 extended_address
+2.03 latitude
+2.04 locality
+2.05 longitude
+2.06 po_box
+2.07 postal_code
+2.08 region
+2.09 street_address
+2.10 type
+2.11 unstructured_address
+
+h3. Album
+
+2.01 description
+2.02 id
+2.03 location
+2.04 media_item_count
+2.05 media_mime_type
+2.06 media_type
+2.07 owner_id
+2.08 thumbnail_url
+2.09 title
+
+h3. BodyType
+
+2.01 build
+2.02 eye_color
+2.03 hair_color
+2.04 height
+2.05 weight
+
+h3. Email
+
+2.01 address
+2.02 type
+
+h3. Enum
+
+2.01 drinker.heavily
+2.02 drinker.no
+2.03 drinker.occasionally
+2.04 drinker.quit
+2.05 drinker.quitting
+2.06 drinker.regularly
+2.07 drinker.socially
+2.08 drinker.yes
+3.01 gender.female
+3.02 gender.male
+4.01 lookingfor.activity_partners
+4.02 lookingfor.dating
+4.03 lookingfor.friends
+4.04 lookingfor.networking
+4.05 lookingfor.random
+4.06 lookingfor.relationship
+5.01 presence.away
+5.02 presence.chat
+5.03 presence.dnd
+5.04 presence.offline
+5.05 presence.online
+5.06 presence.xa
+6.01 smoker.heavily
+6.02 smoker.no
+6.03 smoker.occasionally
+6.04 smoker.quit
+6.05 smoker.quitting
+6.06 smoker.regularly
+6.07 smoker.socially
+6.08 smoker.yes
+
+h3. Environment
+
+2.01 objecttype.activity
+2.02 objecttype.address
+2.03 objecttype.body_type
+2.04 objecttype.email
+2.05 objecttype.filter_type
+2.06 objecttype.media_item
+2.07 objecttype.message
+2.08 objecttype.message_type
+2.09 objecttype.name
+2.10 objecttype.organization
+2.11 objecttype.person
+2.12 objecttype.phone
+2.13 objecttype.sort_order
+2.14 objecttype.url
+
+h3. IdSpec
+
+2.01 group_id
+2.02 network_distance
+2.03 user_id
+3.01 groupid.all
+3.02 groupid.friends
+3.03 groupid.self
+4.01 personid.owner
+4.02 personid.viewer
+
+h3. MediaItem
+
+2.01 album_id
+2.02 created
+2.03 description
+2.04 duration
+2.05 file_size
+2.06 id
+2.07 language
+2.08 last_updated
+2.09 location
+2.10 mime_type
+2.11 num_comments
+2.12 num_views
+2.13 num_votes
+2.14 rating
+2.15 start_time
+2.16 tagged_people
+2.17 tags
+2.18 thumbnail_url
+2.19 title
+2.20 type
+2.21 url
+3.01 type.audio
+3.02 type.image
+3.03 type.video
+
+h3. Message
+
+* The following fields are defined, based on their specification in the OpenSocial JavaScript apis: type, title, body, titleId, bodyId, id, recipients, senderId, timeSent, inReplyTo, replies, status, appUrl, collectionIds, updated, urls.
+
+2.01 app_url
+2.02 body
+2.03 body_id
+2.04 collection_ids
+2.05 id
+2.06 in_reply_to
+2.07 recipients
+2.08 replies
+2.09 sender_id
+2.10 status
+2.11 time_sent
+2.12 title
+2.13 title_id
+2.14 type
+2.15 updated
+2.16 urls
+
+h3. MessageCollection
+
+2.01 id
+2.02 title
+2.03 total
+2.04 unread
+2.05 updated
+2.06 urls
+
+h3. Name
+
+2.01 additional_name
+2.02 family_name
+2.03 given_name
+2.04 honorific_prefix
+2.05 honorific_suffix
+2.06 unstructured
+
+h3. Organization
+
+2.01 address
+2.02 description
+2.03 end_date
+2.04 field
+2.05 name
+2.06 salary
+2.07 start_date
+2.08 sub_field
+2.09 title
+2.10 webpage
+
+h3. Person
+
+2.01 about_me
+2.02 activities
+2.03 addresses
+2.04 age
+2.05 body_type
+2.06 books
+2.07 cars
+2.08 children
+2.09 current_location
+2.10 date_of_birth
+2.11 drinker
+2.12 emails
+2.13 ethnicity
+2.14 fashion
+2.15 food
+2.16 gender
+2.17 happiest_when
+2.18 has_app
+2.19 heroes
+2.20 humor
+2.21 id
+2.22 interests
+2.23 job_interests
+2.24 jobs
+2.25 languages_spoken
+2.26 living_arrangement
+2.27 looking_for
+2.28 movies
+2.29 music
+2.30 name
+2.31 network_presence
+2.32 nickname
+2.33 pets
+2.34 phone_numbers
+2.35 political_views
+2.36 profile_song
+2.37 profile_url
+2.38 profile_video
+2.39 quotes
+2.40 relationship_status
+2.41 religion
+2.42 romance
+2.43 scared_of
+2.44 schools
+2.45 sexual_orientation
+2.46 smoker
+2.47 sports
+2.48 status
+2.49 tags
+2.50 thumbnail_url
+2.51 time_zone
+2.52 turn_offs
+2.53 turn_ons
+2.54 tv_shows
+2.55 urls
+
+h3. Phone
+
+2.01 number
+2.02 type
+
+h3. Url
+
+2.01 address
+2.02 link_text
+2.03 type
+
+h1. More
+
+---------------------------------------------------------------------------
+
+http://wiki.opensocial.org/index.php?title=Main_Page
+http://wiki.opensocial.org/index.php?title=Friendster
+http://wiki.opensocial.org/index.php?title=Orkut
+http://wiki.opensocial.org/index.php?title=MySpace
+
+
+* http://wiki.opensocial.org/index.php?title=Main_Page
+* http://api.example.org/people/userID/@me
+* http://api.example.org/people/userID/@self
+* http://api.example.org/people/userID/@friends
+* http://api.example.org/people/userID/@all
+* http://api.example.org/activities/userID/appID/selector
+
+* format count startIndex updatedSince
+* <person>, <group>, <activity>, or <appdata>.
+
+
+* S id                    Unique identifier for the Person. Each Person returned MUST include a non-empty id value. This identifier MUST be unique across this user's entire set of people, but MAY not be unique across multiple users' data. It MUST be a stable ID that does not change when the same contact is returned in subsequent requests. For instance, an e-mail address is not a good id, because the same person may use a different e-mail address in the future. Usually, in internal database ID will be the right choice here, e.g. "12345".
+* S name                  The broken-out components and fully formatted version of the person's real name, as described in Section 11.1.3 (name Element).
+* S nickname              The casual way to address this Person in real life, e.g. "Bob" or "Bobby" instead of "Robert". This field SHOULD NOT be used to represent a user's username (e.g. jsmarr or daveman692); the latter should be represented by the preferredUsername field.
+* S preferredUsername     The preferred username of this person on sites that ask for a username (e.g. jsmarr or daveman692). This field may be more useful for describing the owner (i.e. the value when /@me/@self is requested) than the user's person, e.g. Consumers MAY wish to use this value to pre-populate a username for this user when signing up for a new service.
+* S published             The date this Person was first added to the user's address book or friends list (i.e. the creation date of this entry). The value MUST be a valid [xs:dateTime] (e.g. 2008-01-23T04:56:22Z).
+* S updated               The most recent date the details of this Person were updated (i.e. the modified date of this entry). The value MUST be a valid [xs:dateTime] (e.g. 2008-01-23T04:56:22Z). If this Person has never been modified since its initial creation, the value MUST be the same as the value of published. Note the updatedSince Query Parameter can be used to select only people whose updated value is equal to or more recent than a given xs:dateTime. This enables Consumers to repeatedly access a user's data and only request newly added or updated contacts since the last access time.
+* S utcOffset             The offset from UTC of this Person's current time zone, as of the time this response was returned. The value MUST conform to the offset portion of [xs:dateTime], e.g. -08:00. Note that this value MAY change over time due to daylight saving time, and is thus meant to signify only the current value of the user's timezone offset.
+
+* S aboutMe
+* S currentLocation
+* S drinker
+* S ethnicity
+* S connected             Boolean value indicating whether the user and this Person have established a bi-directionally asserted connection of some kind on the Service Provider's service. The value MUST be either true or false. The value MUST be true if and only if there is at least one value for the relationship field, described below, and is thus intended as a summary value indicating that some type of bi-directional relationship exists, for Consumers that aren't interested in the specific nature of that relationship. For traditional address books, in which a user stores information about other contacts without their explicit acknowledgment, or for services in which users choose to "follow" other users without requiring mutual consent, this value will always be false.
+* S displayName           The name of this Person, suitable for display to end-users. Each Person returned MUST include a non-emptydisplayName value. The name SHOULD be the full name of the Person being described if known (e.g. Cassandra Doll or Mrs. Cassandra Lynn Doll, Esq.), but MAY be a username or handle, if that is all that is available (e.g. doll). The value provided SHOULD be the primary textual label by which this Person is normally displayed by the Service Provider when presenting it to end-users.
+* S gender                The gender of this person. Service Providers SHOULD return one of the following Canonical Values, if appropriate:male, female, or undisclosed, and MAY return a different value if it is not covered by one of these Canonical Values.
+
+* S bodyType
+* S note                  Notes about this person, with an unspecified meaning or usage (normally notes by the user about this person). This field MAY contain newlines.
+* S fashion
+* S happiestWhen
+* S humor
+* S livingArrangement
+* S lookingFor
+* S profileSong
+* S profileVideo
+* S relationshipStatus
+* S religion
+* S romance
+* S scaredOf
+* S sexualOrientation
+* S smoker
+* S status
+* S anniversary           The wedding anniversary of this person. The value MUST be a valid xs:date (e.g. 1975-02-14). The year value MAY be set to 0000 when the year is not available.
+* S birthday              The birthday of this person. The value MUST be a valid xs:date (e.g. 1975-02-14). The year value MAY be set to0000 when the age of the Person is private or the year is not available.
+
+* P emails                E-mail address for this Person. The value SHOULD be canonicalized by the Service Provider, e.g.joseph@plaxo.com instead of joseph@PLAXO.COM.
+* P urls                  URL of a web page relating to this Person. The value SHOULD be canonicalized by the Service Provider, e.g.http://josephsmarr.com/about/ instead of JOSEPHSMARR.COM/about/. In addition to the standard Canonical Values for type, this field also defines the additional Canonical Values blog and profile.
+* P phoneNumbers          Phone number for this Person. No canonical value is assumed here. In addition to the standard Canonical Values for type, this field also defines the additional Canonical Values mobile, fax, and pager.
+* P ims                   Instant messaging address for this Person. No official canonicalization rules exist for all instant messaging addresses, but Service Providers SHOULD remove all whitespace and convert the address to lowercase, if this is appropriate for the service this IM address is used for. Instead of the standard Canonical Values for type, this field defines the following Canonical Values to represent currently popular IM services: aim, gtalk, icq, xmpp,msn, skype, qq, and yahoo.
+* P photos                URL of a photo of this person. The value SHOULD be a canonicalized URL, and MUST point to an actual image file (e.g. a GIF, JPEG, or PNG image file) rather than to a web page containing an image. Service Providers MAY return the same image at different sizes, though it is recognized that no standard for describing images of various sizes currently exists. Note that this field SHOULD NOT be used to send down arbitrary photos taken by this user, but specifically profile photos of the contact suitable for display when describing the contact.
+* P tags                  A user-defined category label for this person, e.g. "favorite" or "web20". These values SHOULD be case-insensitive, and there SHOULD NOT be multiple tags provided for a given person that differ only in case. Note that this field consists only of a string value.
+* P relationships         A bi-directionally asserted relationship type that was established between the user and this person by the Service Provider. The value SHOULD conform to one of the XFN relationship values (e.g. kin, friend, contact, etc.) if appropriate, but MAY be an alternative value if needed. Note this field is a parallel set of category labels to the tags field, but relationships MUST have been bi-directionally confirmed, whereas tags are asserted by the user without acknowledgment by this Person. Note that this field consists only of a string value.
+* P addresses             A physical mailing address for this Person, as described in Section 11.1.4 (address Element).
+* P organizations         A current or past organizational affiliation of this Person, as described in Section 11.1.5 (organization Element).
+* P accounts              An online account held by this Person, as described in Section 11.1.6 (account Element).
+* P appdata               A collection of AppData keys and values, as described in Section 3.5.1 (an isolated AppData example).
+* P activities
+* P books
+* P cars
+* P children
+* P food
+* P heroes
+* P interests
+* P jobInterests
+* P languages
+* P languagesSpoken
+* P movies
+* P music
+* P pets
+* P politicalViews
+* P quotes
+* P sports
+* P turnOffs
+* P turnOns
+* P tvShows.
+
+* plural fields
+** value                 The primary value of this field, e.g. the actual e-mail address, phone number, or URL. When specifying a sortByfield in the Query Parameters for a Plural Field, the default meaning is to sort based on this value sub-field. Each non-empty Plural Field value MUST contain at least the value sub-field, but all other sub-fields are optional.
+** type                  The type of field for this instance, usually used to label the preferred function of the given contact information. Unless otherwise specified, this string value specifies Canonical Values of work, home, and other.
+** primary               A Boolean value indicating whether this instance of the Plural Field is the primary or preferred value of for this field, e.g. the preferred mailing address or primary e-mail address. Service Providers MUST NOT mark more than one instance of the same Plural Field as primary="true", and MAY choose not to mark any fields as primary, if this information is not available. For efficiency, Service Providers SHOULD NOT mark all non-primary fields with primary="false", but should instead omit this sub-field for all non-primary instances.
+
+
