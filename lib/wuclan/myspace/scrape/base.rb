@@ -33,9 +33,13 @@ module Wuclan
         #
         # Generate request URL from other attributes
         def make_url
-          "http://api.msappspace.com/#{resource_path}/#{identifier}"
+          "http://api.myspace.com/#{resource_path}/#{identifier}"
         end
       end
+
+      # http://www.juicyfly.com/playground/myspace.php
+      #http://www.throwingbeans.org/myspace_parser.html
+
 
       # Activities
       #
@@ -59,7 +63,7 @@ module Wuclan
       # Basic Info: UserId, User URI, Display name, Web URI, Image URI, Large Image URI, User Type, Last Update Date
       # Full Info:  Profile URI, City, Region, Postal code, Country, Hometown, Age, Gender, Culture, About Me, Marital Status
       class UserRequest < Base
-        def make_url() "http://api.msappspace.com/v1/users/{userId}/profile.json?detailtype=[basic|full|extended]"
+        def make_url() "http://api.myspace.com/v1/users/{userId}/profile.json?detailtype=[basic|full|extended]"
         end
       end
 
@@ -84,7 +88,7 @@ module Wuclan
       #
       class FriendsRequest < Base
         def make_url
-          "http://api.msappspace.com/v1/users/{userId}/friends.json?[list=top|online|app|list][&page=N][&page_size=M|all][&show=mood|status|online]"
+          "http://api.myspace.com/v1/users/{userId}/friends.json?[list=top|online|app|list][&page=N][&page_size=M|all][&show=mood|status|online]"
         end
       end
 
@@ -110,7 +114,7 @@ module Wuclan
       #
       class ActivitiesRequest < Base
         def make_url
-          "http://api.msappspace.com/v1/users/{userId}/activities.json"
+          "http://api.myspace.com/v1/users/{userId}/activities.json"
         end
       end
 
@@ -135,7 +139,7 @@ module Wuclan
       #
       class FriendsActivitiesRequest < Base
         def make_url
-          "http://api.msappspace.com/v1/users/{userId}/friends/activities.json"
+          "http://api.myspace.com/v1/users/{userId}/friends/activities.json"
         end
       end
 
