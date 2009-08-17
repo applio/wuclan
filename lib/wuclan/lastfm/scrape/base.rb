@@ -75,6 +75,8 @@ module Wuclan
         #
       end
 
+
+
       class LastfmAlbumInfoRequest              < Base ; self.resource_path = 'album.getinfo&album='              ; end
       class LastfmAlbumTagsRequest              < Base ; self.resource_path = 'album.gettags&album='              ; end
       class LastfmArtistEventsRequest           < Base ; self.resource_path = 'artist.getevents&artist='          ; end
@@ -135,6 +137,85 @@ module Wuclan
       class LastfmUserWeeklyTrackChartRequest   < Base ; self.resource_path = 'user.getweeklytrackchart&user='    ; end
       class LastfmVenueEventsRequest            < Base ; self.resource_path = 'venue.getevents&venue='            ; end
       class LastfmVenuePastEventsRequest        < Base ; self.resource_path = 'venue.getpastevents&venue='        ; end
+
+      module LastfmContainsUsers
+        def recursive_requests &block
+          users = main_result['user'] or return
+          users.each do |user|
+            yield LastfmUserInfoRequest.new(user['name'])
+          end
+        end
+      end
+
+      # album              class LastfmAlbumInfoRequest              < Base ; self.resource_path = 'album.getinfo&album='              ; end
+      # albums             class LastfmArtistTopAlbumsRequest        < Base ; self.resource_path = 'artist.gettopalbums&artist='       ; end
+      # albums             class LastfmTagTopAlbumsRequest           < Base ; self.resource_path = 'tag.gettopalbums&tag='             ; end
+      # albums             class LastfmUserTopAlbumsRequest          < Base ; self.resource_path = 'user.gettopalbums&user='           ; end
+      #
+      # artist             class LastfmArtistInfoRequest             < Base ; self.resource_path = 'artist.getinfo&artist='            ; end
+      # artists            class LastfmArtistSimilarRequest          < Base ; self.resource_path = 'artist.getsimilar&artist='         ; end
+      # artists            class LastfmGeoTopArtistsRequest          < Base ; self.resource_path = 'geo.gettopartists&geo='            ; end
+      # artists            class LastfmTagTopArtistsRequest          < Base ; self.resource_path = 'tag.gettopartists&tag='            ; end
+      # artists            class LastfmUserRecommendedArtistsRequest < Base ; self.resource_path = 'user.getrecommendedartists&user='  ; end
+      # artists            class LastfmUserTopArtistsRequest         < Base ; self.resource_path = 'user.gettopartists&user='          ; end
+      #
+      # event              class LastfmEventInfoRequest              < Base ; self.resource_path = 'event.getinfo&event='              ; end
+      # events             class LastfmArtistEventsRequest           < Base ; self.resource_path = 'artist.getevents&artist='          ; end
+      # events             class LastfmGeoEventsRequest              < Base ; self.resource_path = 'geo.getevents&geo='                ; end
+      # events             class LastfmUserEventsRequest             < Base ; self.resource_path = 'user.getevents&user='              ; end
+      # events             class LastfmUserPastEventsRequest         < Base ; self.resource_path = 'user.getpastevents&user='          ; end
+      # events             class LastfmUserRecommendedEventsRequest  < Base ; self.resource_path = 'user.getrecommendedevents&user='   ; end
+      # events             class LastfmVenueEventsRequest            < Base ; self.resource_path = 'venue.getevents&venue='            ; end
+      # events             class LastfmVenuePastEventsRequest        < Base ; self.resource_path = 'venue.getpastevents&venue='        ; end
+      #
+      # shouts             class LastfmArtistShoutsRequest           < Base ; self.resource_path = 'artist.getshouts&artist='          ; end
+      # shouts             class LastfmEventShoutsRequest            < Base ; self.resource_path = 'event.getshouts&event='            ; end
+      # shouts             class LastfmUserShoutsRequest             < Base ; self.resource_path = 'user.getshouts&user='              ; end
+      #
+      # tags               class LastfmAlbumTagsRequest              < Base ; self.resource_path = 'album.gettags&album='              ; end
+      # tags               class LastfmArtistTagsRequest             < Base ; self.resource_path = 'artist.gettags&artist='            ; end
+      # tags               class LastfmArtistTopTagsRequest          < Base ; self.resource_path = 'artist.gettoptags&artist='         ; end
+      # tags               class LastfmTagSimilarRequest             < Base ; self.resource_path = 'tag.getsimilar&tag='               ; end
+      # tags               class LastfmTagTopTagsRequest             < Base ; self.resource_path = 'tag.gettoptags&tag='               ; end
+      # tags               class LastfmTrackTagsRequest              < Base ; self.resource_path = 'track.gettags&track='              ; end
+      # tags               class LastfmTrackTopTagsRequest           < Base ; self.resource_path = 'track.gettoptags&track='           ; end
+      # tags               class LastfmUserTopTagsRequest            < Base ; self.resource_path = 'user.gettoptags&user='             ; end
+      #
+      # track              class LastfmTrackInfoRequest              < Base ; self.resource_path = 'track.getinfo&track='              ; end
+      # tracks             class LastfmArtistTopTracksRequest        < Base ; self.resource_path = 'artist.gettoptracks&artist='       ; end
+      # tracks             class LastfmGeoTopTracksRequest           < Base ; self.resource_path = 'geo.gettoptracks&geo='             ; end
+      # tracks             class LastfmTagTopTracksRequest           < Base ; self.resource_path = 'tag.gettoptracks&tag='             ; end
+      # tracks             class LastfmTrackSimilarRequest           < Base ; self.resource_path = 'track.getsimilar&track='           ; end
+      # tracks             class LastfmUserLovedTracksRequest        < Base ; self.resource_path = 'user.getlovedtracks&user='         ; end
+      # tracks             class LastfmUserRecentTracksRequest       < Base ; self.resource_path = 'user.getrecenttracks&user='        ; end
+      # tracks             class LastfmUserTopTracksRequest          < Base ; self.resource_path = 'user.gettoptracks&user='           ; end
+      #
+      # user               class LastfmUserInfoRequest               < Base ; self.resource_path = 'user.getinfo&user='                ; end
+      # users              class LastfmArtistTopFansRequest          < Base ; self.resource_path = 'artist.gettopfans&artist='         ; end
+      # users              class LastfmEventAttendeesRequest         < Base ; self.resource_path = 'event.getattendees&event='         ; end
+      # users              class LastfmGroupMembersRequest           < Base ; self.resource_path = 'group.getmembers&group='           ; end
+      # users              class LastfmTrackTopFansRequest           < Base ; self.resource_path = 'track.gettopfans&track='           ; end
+      # users              class LastfmUserFriendsRequest            < Base ; self.resource_path = 'user.getfriends&user='             ; end
+      # users              class LastfmUserNeighboursRequest         < Base ; self.resource_path = 'user.getneighbours&user='          ; end
+      #
+      # weeklyalbumchart   class LastfmGroupWeeklyAlbumChartRequest  < Base ; self.resource_path = 'group.getweeklyalbumchart&group='  ; end
+      # weeklyalbumchart   class LastfmUserWeeklyAlbumChartRequest   < Base ; self.resource_path = 'user.getweeklyalbumchart&user='    ; end
+      # weeklyartistchart  class LastfmGroupWeeklyArtistChartRequest < Base ; self.resource_path = 'group.getweeklyartistchart&group=' ; end
+      # weeklyartistchart  class LastfmTagWeeklyArtistChartRequest   < Base ; self.resource_path = 'tag.getweeklyartistchart&tag='     ; end
+      # weeklyartistchart  class LastfmUserWeeklyArtistChartRequest  < Base ; self.resource_path = 'user.getweeklyartistchart&user='   ; end
+      # weeklychartlist    class LastfmGroupWeeklyChartListRequest   < Base ; self.resource_path = 'group.getweeklychartlist&group='   ; end
+      # weeklychartlist    class LastfmTagWeeklyChartListRequest     < Base ; self.resource_path = 'tag.getweeklychartlist&tag='       ; end
+      # weeklychartlist    class LastfmUserWeeklyChartListRequest    < Base ; self.resource_path = 'user.getweeklychartlist&user='     ; end
+      # weeklytrackchart   class LastfmGroupWeeklyTrackChartRequest  < Base ; self.resource_path = 'group.getweeklytrackchart&group='  ; end
+      # weeklytrackchart   class LastfmUserWeeklyTrackChartRequest   < Base ; self.resource_path = 'user.getweeklytrackchart&user='    ; end
+      # #
+      # images             class LastfmArtistImagesRequest           < Base ; self.resource_path = 'artist.getimages&artist='          ; end
+      # playlist           class LastfmPlaylistfetchRequest          < Base ; self.resource_path = 'playlist.fetch&playlist='          ; end
+      # playlists          class LastfmUserPlaylistsRequest          < Base ; self.resource_path = 'user.getplaylists&user='           ; end
+      # podcast            class LastfmArtistPodcastRequest          < Base ; self.resource_path = 'artist.getpodcast&artist='         ; end
+      # stations           class LastfmUserRecentStationsRequest     < Base ; self.resource_path = 'user.getrecentstations&user='      ; end
+      # tasteometer        class LastfmTasteometercompareRequest     < Base ; self.resource_path = 'tasteometer.compare&tasteometer='  ; end
+
 
     end
   end

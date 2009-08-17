@@ -3,15 +3,6 @@ module Wuclan
   module Lastfm
     module Scrape
 
-      class LastfmArtistTopFansRequest
-        def recursive_requests
-          users = main_result['user'] or return
-          users.each do |user|
-            yield LastfmUserInfoRequest.new(user['name'])
-          end
-        end
-      end
-
 
       class LastfmRequestStream < Monkeyshines::RequestStream::KlassRequestStream
         include Wuclan::Lastfm::Scrape
@@ -39,7 +30,7 @@ module Wuclan
             requestables.each do |klass|
               req = klass.new(artist.identifier)
               yield req
-              req.recursive_requests.each do |req|
+              req.recursive_requests do |req|
                 yield req
                 break if (! req.healthy?) || (page > 4)
               end
