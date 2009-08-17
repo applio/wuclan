@@ -4,6 +4,7 @@ module Wuclan
   module Lastfm
     module Scrape
       autoload :Base,                         'wuclan/lastfm/scrape/base.rb'
+      autoload :LastfmRequestStream,          'wuclan/lastfm/scrape/lastfm_request_stream.rb'
       autoload :LastfmArtistShoutsRequest,    'wuclan/lastfm/scrape/base.rb'
       autoload :LastfmArtistTopFansRequest,   'wuclan/lastfm/scrape/base.rb'
       autoload :LastfmArtistTopTracksRequest, 'wuclan/lastfm/scrape/base.rb'
