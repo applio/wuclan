@@ -5,8 +5,6 @@ require 'monkeyshines/runner/base'
 require 'pathname'
 
 #
-#
-#
 require 'wuclan/domains/twitter'
 # un-namespace request classes.
 include Wuclan::Twitter::Scrape
@@ -37,7 +35,6 @@ opts = Trollop::options do
   opt :chunk_time,     "Frequency to rotate chunk files (in seconds)", :type => Integer, :default => 60*60*4
   opt :dest_dir,       "Filename base to store output. default ./work/ripd", :default => WORK_DIR+'/ripd'
   opt :dest_pattern,   "Pattern for dump file output",                 :default => ":dest_dir/:date/:handle+:timestamp-:pid.tsv"
-
 end
 opts[:handle] ||= 'com.twitter'
 scrape_config = YAML.load(File.open(ENV['HOME']+'/.monkeyshines'))
@@ -49,7 +46,7 @@ if (opts[:log])
   Monkeyshines.logger = Logger.new(opts[:log]+'.log', 'daily')
   $stdout = $stderr = File.open(opts[:log]+"-console.log", "a")
 end
-periodic_log = Monkeyshines::Monitor::PeriodicLogger.new(:iter_interval => 1, :time_interval => 30)
+periodic_log = Monkeyshines::Monitor::PeriodicLogger.new(:iters => 1, :time => 30)
 
 #
 # ******************** Load from store ********************

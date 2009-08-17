@@ -33,7 +33,7 @@ request_queue   = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::
 # Scrape requests by HTTP
 fetcher         = Monkeyshines::Fetcher::HttpFetcher.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
-periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
+periodic_log    = Monkeyshines::Monitor::PeriodicLogger.new(:time => 60)
 # Persist scrape_job jobs in distributed DB
 job_store       = Monkeyshines::Store::TyrantTdbKeyStore.new(opts[:job_db])
 

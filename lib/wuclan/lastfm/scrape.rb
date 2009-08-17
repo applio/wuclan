@@ -1,8 +1,9 @@
 require 'monkeyshines/scrape_request/raw_json_contents'
+require 'wuclan/lastfm/scrape/base.rb'
 module Wuclan
   module Lastfm
     module Scrape
-      autoload :Base, 'wuclan/lastfm/scrape/base.rb'
+      autoload :Base,                         'wuclan/lastfm/scrape/base.rb'
       autoload :LastfmArtistShoutsRequest,    'wuclan/lastfm/scrape/base.rb'
       autoload :LastfmArtistTopFansRequest,   'wuclan/lastfm/scrape/base.rb'
       autoload :LastfmArtistTopTracksRequest, 'wuclan/lastfm/scrape/base.rb'

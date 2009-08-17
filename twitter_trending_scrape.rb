@@ -35,7 +35,7 @@ store             = Monkeyshines::Store::ChunkedFlatFileStore.new dumpfile_patte
 # Scrape requests by HTTP
 fetcher           = Monkeyshines::Fetcher::HttpFetcher.new Monkeyshines::CONFIG[:twitter]
 # Log every 60 seconds
-periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time_interval => 60)
+periodic_log      = Monkeyshines::Monitor::PeriodicLogger.new(:time => 60)
 
 
 class TwitterTrendingJob < Struct.new(
