@@ -24,7 +24,7 @@ module Wuclan
         class_inheritable_accessor :resource_path, :page_limit, :items_per_page
         # API
         cattr_accessor :api_key
-        self.api_key = Monkeyshines::CONFIG[:fetcher][:api_key] rescue nil
+        self.api_key = Monkeyshines::CONFIG[:api_key] rescue nil
         #
         def initialize *args
           super *args

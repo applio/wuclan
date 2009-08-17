@@ -23,6 +23,9 @@ module Wuclan
         include Monkeyshines::RawJsonContents
         # Authenticates by URL
         include Monkeyshines::ScrapeRequestCore::SignedUrl
+        # API
+        cattr_accessor :api_key
+        self.api_key = Monkeyshines::CONFIG[:api_key] rescue nil
 
         # Paginated
         class_inheritable_accessor :resource_path, :page_limit, :items_per_page
@@ -39,6 +42,18 @@ module Wuclan
         # Generate request URL from other attributes
         def make_url
           "http://api.friendster.com/v1/#{resource_path}/#{identifier}#{resource_tail}"
+        end
+      end
+
+      class TokenRequest < Base
+        def make_url()
+          authed_url("http://api.friendster.com/v1/token", {})
+        end
+      end
+
+      class SessionRequest < Base
+        def make_url(auth_token)
+          authed_url("http://api.friendster.com/v1/session", { :auth_token => auth_token })
         end
       end
 
