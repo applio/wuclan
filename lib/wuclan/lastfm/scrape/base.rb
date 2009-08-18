@@ -60,13 +60,15 @@ module Wuclan
         def num_pages
           attrs = result_attrs
           return 1 if (attrs.blank? || attrs['totalPages'].blank?)
-          attrs['totalPages'].to_i
+          attrs['totalPages'].to_i.clamp(1,5)
         end
 
         def recursive_requests &block
           next unless healthy?
-          (2 .. num_pages).each do |page|
-            yield self.class.new(identifier, page)
+          if (num_pages > 2) && (self.page.to_i < 2)
+            (2 .. num_pages).each do |page|
+              yield self.class.new(identifier, page)
+            end
           end
         end
 
@@ -143,6 +145,29 @@ module Wuclan
           users = main_result['user'] or return
           users.each do |user|
             yield LastfmUserInfoRequest.new(user['name'])
+          end
+        end
+      end
+
+
+      class LastfmArtistInfoRequest
+        class_inheritable_accessor :requestables
+        self.requestables = [
+          LastfmArtistShoutsRequest,
+          LastfmArtistEventsRequest,
+          LastfmArtistTopFansRequest,
+          #
+          # LastfmArtistImagesRequest,
+          # LastfmArtistPodcastRequest,
+          # LastfmArtistSimilarRequest,
+          # LastfmArtistTagsRequest,
+          # LastfmArtistTopAlbumsRequest,
+          # LastfmArtistTopTagsRequest,
+          # LastfmArtistTopTracksRequest,
+        ]
+        def recursive_requests &block
+          requestables.each do |klass|
+            yield klass.new(identifier)
           end
         end
       end
