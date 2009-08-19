@@ -28,29 +28,32 @@ module Wuclan
         #
         def initialize *args
           super *args
-          self.identifier = url_encode(identifier)
           self.page = (page.to_i < 1 ? 1 : page.to_i)
           make_url! if (! url)
         end
+
         #
         # Generate request URL from other attributes
         def make_url
           # This works for most of the twitter calls
-          "http://ws.audioscrobbler.com/2.0/?method=#{resource_path}#{identifier}&limit=100&page=#{page}&api_key=#{api_key}&format=json"
+          "http://ws.audioscrobbler.com/2.0/?method=#{resource_path}#{identifier}&limit=50&page=#{page}&api_key=#{api_key}&format=json"
         end
 
+        def self.build_identifier hsh
+          hsh.map{|attr, val| "#{attr}=#{Monkeyshines.url_encode(val)}" }.join("&")
+        end
 
         def healthy?
-          super && (
-            (contents !~ %r{^\{"error":})
-            )
+          super && ( (contents !~ %r{^\{"error":}) )
         end
 
-
+        def main_fieldname
+          resource_path.gsub(/.*\.get(\w+)&.*/, '\1')
+        end
         def main_result
+          return @main_result if @main_result
           return unless healthy?
-          field = resource_path.gsub(/.*\.get(\w+)&.*/, '\1')
-          parsed_contents[field] rescue nil
+          @main_result = parsed_contents[main_fieldname] rescue nil
         end
 
         def result_attrs
@@ -107,7 +110,7 @@ module Wuclan
       class LastfmTrackTopFansRequest           < Base ; self.resource_path = 'track.gettopfans&track='           ; end
       class LastfmTrackTopTagsRequest           < Base ; self.resource_path = 'track.gettoptags&track='           ; end
       class LastfmUserEventsRequest             < Base ; self.resource_path = 'user.getevents&user='              ; end
-      class LastfmUserFriendsRequest            < Base ; self.resource_path = 'user.getfriends&user='             ; end
+      class LastfmUserFriendsRequest            < Base ; self.resource_path = 'user.getfriends&recenttracks=1&user='             ; end
       class LastfmUserInfoRequest               < Base ; self.resource_path = 'user.getinfo&user='                ; end
       class LastfmUserLovedTracksRequest        < Base ; self.resource_path = 'user.getlovedtracks&user='         ; end
       class LastfmUserNeighboursRequest         < Base ; self.resource_path = 'user.getneighbours&user='          ; end
@@ -131,35 +134,23 @@ module Wuclan
 
 
       Base.class_eval do
+        class_inheritable_accessor :requestables
+        self.requestables = []
         def recursive_requests &block
-          next unless healthy?
-          if (num_pages > 2) && (self.page.to_i < 2)
+          return unless healthy?
+          #
+          # Pages
+          #
+          if (num_pages >= 2) && (self.page.to_i < 2)
             (2 .. num_pages).each do |page|
               req = self.class.new(identifier, page)
               req.req_generation = req_generation.to_i
               yield req
             end
           end
-        end
-      end
-
-      class LastfmArtistInfoRequest
-        class_inheritable_accessor :requestables
-        self.requestables = [
-          # LastfmArtistShoutsRequest,
-          # LastfmArtistEventsRequest,
-          # LastfmArtistTopFansRequest,
-          # LastfmArtistTopAlbumsRequest,
-          # LastfmArtistTopTagsRequest,
-          LastfmArtistTopTracksRequest,
-          # LastfmArtistTagsRequest,
           #
-          # LastfmArtistImagesRequest,
-          # LastfmArtistPodcastRequest,
-          # LastfmArtistSimilarRequest,
-        ]
-        def recursive_requests *args, &block
-          super(*args, &block)
+          # requestables
+          #
           requestables.each do |klass|
             req = klass.new(identifier)
             req.req_generation = req_generation.to_i + 1
@@ -168,30 +159,66 @@ module Wuclan
         end
       end
 
-      # module LastfmContainsUsers
-      #   def recursive_requests *args, &block
-      #     super(*args, &block)
-      #     users = main_result['user'] or return
-      #     users.each do |user|
-      #       req = LastfmUserInfoRequest.new(user['name'])
-      #       req.req_generation = req_generation.to_i + 1
-      #       yield req
-      #     end
-      #   end
-      # end
-      # [ LastfmArtistTopFansRequest, LastfmEventAttendeesRequest, LastfmGroupMembersRequest,
-      #   LastfmTrackTopFansRequest,  LastfmUserFriendsRequest,    LastfmUserNeighboursRequest,
-      # ].each do |klass|
-      #   klass.class_eval do include LastfmContainsUsers ; end
-      # end
+      class LastfmArtistInfoRequest
+        self.requestables = [
+          LastfmArtistSimilarRequest,
+          LastfmArtistTopAlbumsRequest,
+          LastfmArtistTopTracksRequest,
+          LastfmArtistShoutsRequest,
+          LastfmArtistEventsRequest,
+          LastfmArtistTopFansRequest,
+          # LastfmArtistTopTagsRequest, LastfmArtistImagesRequest, LastfmArtistPodcastRequest,
+        ]
+      end
+      class LastfmArtistSimilarRequest ; def main_fieldname() 'similarartists' end ; end
+      class LastfmTrackSimilarRequest  ; def main_fieldname() 'similartracks'  end ; end
 
+      class LastfmTrackInfoRequest
+        self.requestables = [LastfmTrackSimilarRequest, LastfmTrackTopFansRequest, LastfmTrackTopTagsRequest]
+      end
+      class LastfmEventInfoRequest
+        self.requestables = [LastfmEventAttendeesRequest, LastfmEventShoutsRequest]
+      end
+      class LastfmUserTopTagsRequest # LastfmUserInfoRequest
+        self.requestables = [
+          # LastfmUserTopTagsRequest,
+          LastfmUserEventsRequest,
+          LastfmUserPastEventsRequest,
+          LastfmUserFriendsRequest, # recenttracks
+          LastfmUserNeighboursRequest,
+          LastfmUserLovedTracksRequest,
+          LastfmUserRecentTracksRequest,
+          LastfmUserShoutsRequest,
+          LastfmUserTopAlbumsRequest,    # period (Optional) : overall | 7day | 3month | 6month | 12month
+          LastfmUserTopArtistsRequest,   # period (Optional) : overall | 7day | 3month | 6month | 12month
+          LastfmUserTopTracksRequest,    # period (Optional) : overall | 7day | 3month | 6month | 12month
+          # uninteresting(?): LastfmUserPlaylistsRequest, LastfmUserWeeklyAlbumChartRequest, LastfmUserWeeklyArtistChartRequest, LastfmUserWeeklyChartListRequest, LastfmUserWeeklyTrackChartRequest,
+          # needs auth:       LastfmUserInfoRequest, LastfmUserRecentStationsRequest, LastfmUserRecommendedArtistsRequest, LastfmUserRecommendedEventsRequest,
+        ]
+      end
+      module LastfmTimeWindowed
+        def recursive_requests *args, &block
+          super(*args, &block)
+          unless (identifier =~ /&period=/)
+            ['7day', '3month', '6month'].each do |period|
+              req = self.class.new(identifier+"&period=#{period}")
+              req.req_generation = req_generation.to_i
+              yield req
+            end
+          end
+        end
+      end
+      [LastfmUserTopArtistsRequest, LastfmUserTopAlbumsRequest, LastfmUserTopTracksRequest
+      ].each do |klass|
+        klass.class_eval do include LastfmTimeWindowed ; end
+      end
 
       module LastfmContainsArtists
         def recursive_requests *args, &block
-          super(*args, &block)
+          super(*args, &block) ; return unless main_result
           artists = main_result['artist'] or return
-          artists.each do |artist|
-            req = LastfmArtistInfoRequest.new(artist['name'])
+          [artists].flatten.each do |artist|
+            req = LastfmArtistInfoRequest.new(url_encode(artist['name']))
             req.req_generation = req_generation.to_i + 1
             yield req
           end
@@ -205,10 +232,13 @@ module Wuclan
 
       module LastfmContainsAlbums
         def recursive_requests *args, &block
-          super(*args, &block)
+          super(*args, &block) ; return unless main_result
           albums = main_result['album'] or return
-          albums.each do |album|
-            req = LastfmAlbumInfoRequest.new(album['name'])
+          [albums].flatten.each do |album|
+            obj_name   = url_encode(album['name']);
+            obj_artist = album['artist']['name'] || album['artist']['#text']
+            rest = self.class.build_identifier(:artist => obj_artist, :mbid => album['mbid'] )
+            req = LastfmAlbumInfoRequest.new("#{obj_name}&#{rest}")
             req.req_generation = req_generation.to_i + 1
             yield req
           end
@@ -221,10 +251,13 @@ module Wuclan
 
       module LastfmContainsTracks
         def recursive_requests *args, &block
-          super(*args, &block)
+          super(*args, &block) ; return unless main_result
           tracks = main_result['track'] or return
-          tracks.each do |track|
-            req = LastfmTrackInfoRequest.new(track['name'])
+          [tracks].flatten.each do |track|
+            obj_name   = url_encode(track['name']);
+            obj_artist = track['artist']['name'] || track['artist']['#text']
+            rest = self.class.build_identifier(:artist => obj_artist, :mbid => track['mbid'] )
+            req = LastfmTrackInfoRequest.new("#{obj_name}&#{rest}")
             req.req_generation = req_generation.to_i + 1
             yield req
           end
@@ -239,10 +272,10 @@ module Wuclan
 
       module LastfmContainsEvents
         def recursive_requests *args, &block
-          super(*args, &block)
+          super(*args, &block) ; return unless main_result
           events = main_result['event'] or return
-          events.each do |event|
-            req = LastfmEventInfoRequest.new(event['name'])
+          [events].flatten.each do |event|
+            req = LastfmEventInfoRequest.new(event['id'])
             req.req_generation = req_generation.to_i + 1
             yield req
           end
@@ -255,22 +288,22 @@ module Wuclan
         klass.class_eval do include LastfmContainsEvents ; end
       end
 
-      module LastfmContainsShouts
+      module LastfmContainsUsers
         def recursive_requests *args, &block
-          super(*args, &block)
-          shouts = main_result['shout'] or return
-          shouts.each do |shout|
-            req = LastfmShoutInfoRequest.new(shout['name'])
+          super(*args, &block) ; return unless main_result
+          users = main_result['user'] or return
+          [users].flatten.each do |user|
+            req = LastfmUserTopTagsRequest.new(url_encode(user['name']))
             req.req_generation = req_generation.to_i + 1
             yield req
           end
         end
       end
-      [ LastfmArtistShoutsRequest, LastfmEventShoutsRequest, LastfmUserShoutsRequest,
+      [ LastfmArtistTopFansRequest, LastfmEventAttendeesRequest, LastfmGroupMembersRequest,
+        LastfmTrackTopFansRequest,  LastfmUserFriendsRequest,    LastfmUserNeighboursRequest,
       ].each do |klass|
-        klass.class_eval do include LastfmContainsShouts ; end
+        klass.class_eval do include LastfmContainsUsers ; end
       end
-
 
 
       #
