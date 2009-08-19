@@ -5,12 +5,6 @@ module Wuclan
 
       class LastfmRequestStream < Monkeyshines::RequestStream::KlassRequestStream
         include Wuclan::Lastfm::Scrape
-        def each *args, &block
-          self.request_store.each(*args) do |klass_name, hsh|
-            klass = FactoryModule.get_class(Wuclan::Lastfm::Scrape, klass_name)
-            yield klass.from_hash(hsh)
-          end
-        end
 
       end
 
