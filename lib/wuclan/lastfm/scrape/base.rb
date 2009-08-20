@@ -217,7 +217,7 @@ module Wuclan
         def recursive_requests *args, &block
           super(*args, &block) ; return unless main_result
           artists = main_result['artist'] or return
-          [artists].flatten.each do |artist|
+          [artists].flatten.compact.each do |artist|
             req = LastfmArtistInfoRequest.new(url_encode(artist['name']))
             req.req_generation = req_generation.to_i + 1
             yield req
@@ -234,9 +234,9 @@ module Wuclan
         def recursive_requests *args, &block
           super(*args, &block) ; return unless main_result
           albums = main_result['album'] or return
-          [albums].flatten.each do |album|
+          [albums].flatten.compact.each do |album|
             obj_name   = url_encode(album['name']);
-            obj_artist = album['artist']['name'] || album['artist']['#text']
+            obj_artist = album['artist']['name'] || album['artist']['#text'] rescue nil
             rest = self.class.build_identifier(:artist => obj_artist, :mbid => album['mbid'] )
             req = LastfmAlbumInfoRequest.new("#{obj_name}&#{rest}")
             req.req_generation = req_generation.to_i + 1
@@ -253,9 +253,9 @@ module Wuclan
         def recursive_requests *args, &block
           super(*args, &block) ; return unless main_result
           tracks = main_result['track'] or return
-          [tracks].flatten.each do |track|
+          [tracks].flatten.compact.each do |track|
             obj_name   = url_encode(track['name']);
-            obj_artist = track['artist']['name'] || track['artist']['#text']
+            obj_artist = track['artist']['name'] || track['artist']['#text'] rescue nil
             rest = self.class.build_identifier(:artist => obj_artist, :mbid => track['mbid'] )
             req = LastfmTrackInfoRequest.new("#{obj_name}&#{rest}")
             req.req_generation = req_generation.to_i + 1
@@ -274,7 +274,7 @@ module Wuclan
         def recursive_requests *args, &block
           super(*args, &block) ; return unless main_result
           events = main_result['event'] or return
-          [events].flatten.each do |event|
+          [events].flatten.compact.each do |event|
             req = LastfmEventInfoRequest.new(event['id'])
             req.req_generation = req_generation.to_i + 1
             yield req
@@ -292,7 +292,7 @@ module Wuclan
         def recursive_requests *args, &block
           super(*args, &block) ; return unless main_result
           users = main_result['user'] or return
-          [users].flatten.each do |user|
+          [users].flatten.compact.each do |user|
             req = LastfmUserTopTagsRequest.new(url_encode(user['name']))
             req.req_generation = req_generation.to_i + 1
             yield req
