@@ -19,15 +19,17 @@ scraper = Monkeyshines::RecursiveRunner.new({
     :log     => { :iters => 100, :dest => Monkeyshines::CONFIG[:handle] },
     :source  => { :type  => Monkeyshines::RequestStream::KlassHashRequestStream,
       :store => { :type => Monkeyshines::RequestStream::EdamameQueue,
-        :store => { :type => 'TyrantStore',    :uri => ':11212'},
-        :queue => { :type => 'BeanstalkQueue', :uris => ['localhost:11210'] } }, },
+        :store => { :uri =>            ':11212',  :type => 'TyrantStore',    },
+        :queue => { :uris => ['localhost:11210'], :type => 'BeanstalkQueue', } }, },
     :dest    => { :type  => :conditional_store,
-      :store => { :rootdir => WORK_DIR },
-      :cache => { :uri => ':11222'     }, },
+      :cache => { :uri =>              ':11222', },
+      :store => { :rootdir => WORK_DIR },},
     # :fetcher => { :type => :fake_fetcher },
     :force_fetch => false,
-    :sleep_time  => 0.25,
+    :sleep_time  => 0.2,
   })
 
 # Execute the scrape
-scraper.run
+loop do
+  scraper.run
+end
