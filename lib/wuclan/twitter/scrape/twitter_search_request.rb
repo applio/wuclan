@@ -8,6 +8,27 @@ module Wuclan
       #
       class TwitterSearchRequest < Monkeyshines::ScrapeRequest
         include Monkeyshines::RawJsonContents
+        #
+        # Define API features
+        #
+        self.items_per_page     = 100
+        self.hard_request_limit = 15
+
+        # Generate paginated TwitterSearchScrapeRequest
+        def recursive_requests page, pageinfo
+          url_str = base_url
+          url_str << "&rpp=#{items_per_page}"
+          url_str << "&max_id=#{unscraped_span.max-1}" if unscraped_span.max
+          Wuclan::Twitter::Scrape::TwitterSearchRequest.new url_str
+        end
+
+        #
+        # Durable handle for this resource, independent of the page/max_id/whatever
+        #
+        def make_url query_term, hsh
+          "http://search.twitter.com/search.json?q=#{query_term}"
+        end
+
         # Extract the actual search items returned
         def items
           parsed_contents['results'] if parsed_contents

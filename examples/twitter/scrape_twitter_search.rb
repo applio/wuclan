@@ -10,23 +10,19 @@ puts WORK_DIR
 #
 Monkeyshines.load_cmdline_options!
 Monkeyshines.load_global_options!(Monkeyshines::CONFIG[:handle])
-require 'wuclan/lastfm' ; include Wuclan::Lastfm::Scrape
+require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 
 #
 # Create runner
 #
 scraper = Monkeyshines::RecursiveRunner.new({
-    :log     => { :iters => 100, :dest => Monkeyshines::CONFIG[:handle] },
+    :log     => { :iters => 1, :dest => Monkeyshines::CONFIG[:handle] },
     :source  => { :type  => Monkeyshines::RequestStream::KlassHashRequestStream,
       :store => { :type => Monkeyshines::RequestStream::EdamameQueue,
-        :store => { :uri =>            ':11212',  :type => 'TyrantStore',    },
-        :queue => { :uris => ['localhost:11210'], :type => 'BeanstalkQueue', } }, },
-    :dest    => { :type  => :conditional_store,
-      :cache => { :uri =>              ':11222', },
-      :store => { :rootdir => WORK_DIR },},
+        :store => { :uri =>            ':11232',  :type => 'TyrantStore',    },
+        :queue => { :uris => ['localhost:11230'], :type => 'BeanstalkQueue', } }, },
     # :fetcher => { :type => :fake_fetcher },
-    :force_fetch => false,
-    :sleep_time  => 0.2,
+    :sleep_time  => 1,
   })
 
 # Execute the scrape

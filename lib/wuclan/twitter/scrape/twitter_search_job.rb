@@ -28,27 +28,7 @@ module Wuclan
           self[:priority]  = 65536 if (self[:priority]  == 0)
           self[:prev_rate] = nil   if (self[:prev_rate] < 1e-6)
         end
-        #
-        # Define API features
-        #
-        self.items_per_page     = 100
-        self.hard_request_limit = 15
-        #
-        # Generate paginated TwitterSearchScrapeRequest
-        #
-        def make_request page, pageinfo
-          url_str = base_url
-          url_str << "&rpp=#{items_per_page}"
-          url_str << "&max_id=#{unscraped_span.max-1}" if unscraped_span.max
-          Wuclan::Twitter::Scrape::TwitterSearchRequest.new url_str
-        end
 
-        #
-        # Durable handle for this resource, independent of the page/max_id/whatever
-        #
-        def base_url
-          "http://search.twitter.com/search.json?q=#{query_term}"
-        end
       end
     end
   end

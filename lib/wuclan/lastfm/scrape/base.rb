@@ -41,10 +41,6 @@ module Wuclan
           "http://ws.audioscrobbler.com/2.0/?method=#{resource_path}#{identifier}&limit=#{items_per_page}&page=#{page}&api_key=#{api_key}&format=json"
         end
 
-        def self.build_identifier hsh
-          hsh.map{|attr, val| "#{attr}=#{Monkeyshines.url_encode(val)}" }.join("&")
-        end
-
         def healthy?
           super && ( (contents !~ %r{^\{"error":}) )
         end
@@ -239,7 +235,7 @@ module Wuclan
           [albums].flatten.compact.each do |album|
             obj_name   = url_encode(album['name']);
             obj_artist = album['artist']['name'] || album['artist']['#text'] rescue nil
-            rest = self.class.build_identifier(:artist => obj_artist, :mbid => album['mbid'] )
+            rest = self.class.make_url_query(:artist => obj_artist, :mbid => album['mbid'] )
             req = LastfmAlbumInfoRequest.new("#{obj_name}&#{rest}")
             req.req_generation = req_generation.to_i + 1
             yield req
@@ -258,7 +254,7 @@ module Wuclan
           [tracks].flatten.compact.each do |track|
             obj_name   = url_encode(track['name']);
             obj_artist = track['artist']['name'] || track['artist']['#text'] rescue nil
-            rest = self.class.build_identifier(:artist => obj_artist, :mbid => track['mbid'] )
+            rest = self.class.make_url_query(:artist => obj_artist, :mbid => track['mbid'] )
             req = LastfmTrackInfoRequest.new("#{obj_name}&#{rest}")
             req.req_generation = req_generation.to_i + 1
             yield req
