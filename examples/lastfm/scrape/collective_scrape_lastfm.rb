@@ -22,7 +22,7 @@ scraper = Monkeyshines::RecursiveRunner.new({
         :store => { :uri =>            ':11212',  :type => 'TyrantStore',    },
         :queue => { :uris => ['localhost:11210'], :type => 'BeanstalkQueue', } }, },
     :dest    => { :type  => :conditional_store,
-      :cache => { :uri =>              ':11222', },
+      :cache => { :uri =>              ':11213', },
       :store => { :rootdir => WORK_DIR },},
     # :fetcher => { :type => :fake_fetcher },
     :force_fetch => false,
@@ -31,5 +31,6 @@ scraper = Monkeyshines::RecursiveRunner.new({
 
 # Execute the scrape
 loop do
+  puts Time.now
   scraper.run
 end

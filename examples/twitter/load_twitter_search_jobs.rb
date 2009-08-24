@@ -27,6 +27,25 @@ opts = Trollop::options do
 end
 Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
 
+
+module Wuclan
+  module Domains
+    module Twitter
+      module Scrape
+        TwitterSearchJob = Struct.new(
+          :query_term,
+          :priority,
+          :prev_items,
+          :prev_rate,
+          :prev_span_min,
+          :prev_span_max
+          )
+      end
+    end
+  end
+end
+
+
 # Queue of request import_jobs, with reschedule requests
 beanstalk_tube  = opts[:handle].gsub(/\w+/,'_')
 request_queue   = Monkeyshines::RequestStream::BeanstalkQueue.new(nil, Twitter::Scrape::TwitterSearchJob, opts[:items_per_job], opts.slice(:min_resched_delay))
