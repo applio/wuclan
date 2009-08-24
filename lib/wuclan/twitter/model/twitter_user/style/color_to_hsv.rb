@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-require 'rubygems'
 
 # Color::RGB.from_html("fed")
 # Color::RGB.from_html("#fed")
