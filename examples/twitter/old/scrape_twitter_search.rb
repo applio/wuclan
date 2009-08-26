@@ -24,7 +24,6 @@ opts = Trollop::options do
   opt :dest_pattern,   "Pattern for dump file output",                         :default => Monkeyshines::Utils::FilenamePattern::DEFAULT_PATTERN_STR
 end
 Trollop::die :dest_dir unless opts[:dest_dir]
-Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
 
 # Queue of request scrape_jobs, with reschedule requests
 beanstalk_tube  = opts[:handle].gsub(/\w+/,'_')

@@ -18,13 +18,6 @@ opts.reverse_merge!({
 scrape_config = YAML.load(File.open(ENV['HOME']+'/.monkeyshines'))
 opts.reverse_merge! scrape_config
 
-# # ******************** Log ********************
-# if (opts[:log])
-#   opts[:log] = (WORK_DIR+'/log/'+File.basename(opts[:from],'.tsv'))
-#   Monkeyshines.logger = Logger.new(opts[:log]+'.log', 'daily')
-#   $stdout = $stderr = File.open(opts[:log]+"-console.log", "a")
-# end
-
 Wuclan::Lastfm::Scrape::Base.api_key = opts[:lastfm_api][:username]
 class Monkeyshines::RequestStream::LastfmRequestStream < Monkeyshines::RequestStream::Base
   def request_for_params identifier, page=1

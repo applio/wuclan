@@ -25,8 +25,6 @@ opts = Trollop::options do
   opt :dest_dir,       "Filename base to store output. e.g. --dump_basename=/data/ripd", :type => String
   opt :dest_pattern,   "Pattern for dump file output",                 :default => ":dest_dir/:handle_prefix/:handle/:date/:handle+:datetime-:pid.tsv"
 end
-Monkeyshines.logger = Logger.new(opts[:log], 'daily') if opts[:log]
-
 
 module Wuclan
   module Domains
