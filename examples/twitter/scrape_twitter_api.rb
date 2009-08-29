@@ -48,8 +48,11 @@ class TwitterRequestStream < Monkeyshines::RequestStream::SimpleRequestStream
   def each
     request_store.each do |*raw_req_args|
       request_klasses.each do |request_klass|
-        req = request_klass.new(raw_req_args)
-        yield req
+        batch = request_klass.new(raw_req_args)
+        batch.each_page do |req|
+          yield req
+          req
+        end
       end
     end
   end
