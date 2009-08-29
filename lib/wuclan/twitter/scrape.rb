@@ -15,6 +15,9 @@ module Wuclan
       autoload :TwitterPublicTimelineRequest, 'wuclan/twitter/scrape/twitter_timeline_request'
       autoload :JsonUserWithTweet,            'wuclan/twitter/scrape/twitter_json_response'
       autoload :JsonTweetWithUser,            'wuclan/twitter/scrape/twitter_json_response'
+
     end
   end
 end
+autoload :TwitterRequestStream,         'wuclan/twitter/scrape/twitter_request_stream'
+autoload :TwitterFakeFetcher,           'wuclan/twitter/scrape/twitter_fake_fetcher'

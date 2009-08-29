@@ -3,7 +3,8 @@ module Wuclan
   module Twitter
     module Scrape
       # Effectively unlimited request maximum
-      NO_LIMIT = 2**31
+      # NO_LIMIT = 2**31
+      NO_LIMIT = (50_000_000 / 100) # controlled insanity
 
       #
       # Base class for twitter API requests
@@ -24,6 +25,8 @@ module Wuclan
         include Wuclan::Twitter::Model
         # Contents are JSON
         include Monkeyshines::RawJsonContents
+        # Requests are paginated
+        include Monkeyshines::ScrapeJob::Paginated
 
         def initialize *args
           super *args
@@ -41,7 +44,7 @@ module Wuclan
         # Generate request URL from other attributes
         def make_url
           # This works for most of the twitter calls
-          "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}"
+          "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page||1}"
         end
         # Set URL from other attributes
         def make_url!
@@ -51,6 +54,26 @@ module Wuclan
         BAD_CHARS = { "\r" => "&#13;", "\n" => "&#10;", "\t" => "&#9;" }
         def response= response
           self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
+        end
+
+        #
+        # Pagination
+        #
+
+        # creates the paginated request
+        def request_for_page page, pageinfo
+          (page.to_i > 1) ? self.class.new(twitter_user_id, page) : self
+        end
+
+        # Number of items
+        def num_items
+          parsed_contents.length rescue 0
+        end
+
+        # if from_result has something to say about the max_total_items, fix the
+        # value appropriately. (For example, a twitter_user's :statuses_count
+        # sets the max_total_items for a TwitterUserTimelineRequest)
+        def set_total_items from_result
         end
 
         # #

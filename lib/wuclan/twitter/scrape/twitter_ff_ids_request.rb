@@ -9,9 +9,9 @@ module Wuclan
       # Produces a (possibly very large) number of AFollowsB.
       #
       class TwitterFollowersIdsRequest < Wuclan::Twitter::Scrape::Base
-        self.resource_path  = 'followers/ids'
-        self.page_limit     = 1
-        self.items_per_page = NO_LIMIT
+        self.resource_path       = 'followers/ids'
+        self.hard_request_limit  = 1
+        self.items_per_page      = NO_LIMIT
         def items_count(thing) thing.followers_count == 0 ? 0 : 1 end
         def make_url() "http://twitter.com/#{resource_path}/#{twitter_user_id}.json" end
 
@@ -39,9 +39,9 @@ module Wuclan
       # Produces a (possibly very large) number of AFollowsB.
       #
       class TwitterFriendsIdsRequest   < Wuclan::Twitter::Scrape::Base
-        self.resource_path  = 'friends/ids'
-        self.page_limit     = 1
-        self.items_per_page = NO_LIMIT
+        self.resource_path       = 'friends/ids'
+        self.hard_request_limit  = 1
+        self.items_per_page      = NO_LIMIT
         def items_count(thing) thing.friends_count == 0 ? 0 : 1 end
         def make_url() "http://twitter.com/#{resource_path}/#{twitter_user_id}.json"  end
 

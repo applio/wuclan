@@ -13,10 +13,15 @@ module Wuclan
       # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-statuses%C2%A0followers
       #
       class TwitterFollowersRequest    < Wuclan::Twitter::Scrape::Base
-        self.resource_path   = 'statuses/followers'
-        self.page_limit      = NO_LIMIT
-        self.items_per_page  = 100
+        self.resource_path      = 'statuses/followers'
+        self.hard_request_limit = NO_LIMIT
+        self.items_per_page     = 100
         def items_count(thing) thing.followers_count end
+
+        # set max_total_items from the favourites_count.
+        def set_total_items twitter_user_info
+          self.max_total_items = twitter_user_info['followers_count'].to_i rescue nil
+        end
 
         # Extracted JSON should be an array
         def healthy?()
@@ -50,10 +55,15 @@ module Wuclan
       # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-statuses%C2%A0friends
       #
       class TwitterFriendsRequest      < Wuclan::Twitter::Scrape::Base
-        self.resource_path  = 'statuses/friends'
-        self.page_limit     = NO_LIMIT
-        self.items_per_page = 100
+        self.resource_path      = 'statuses/friends'
+        self.hard_request_limit = NO_LIMIT
+        self.items_per_page     = 100
         def items_count(thing) thing.friends_count end
+
+        # set max_total_items from the friends_count.
+        def set_total_items twitter_user_info
+          self.max_total_items = twitter_user_info['friends_count'].to_i rescue nil
+        end
 
         # Extracted JSON should be an array
         def healthy?()
@@ -88,14 +98,19 @@ module Wuclan
       # http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-favorites
       #
       class TwitterFavoritesRequest    < Wuclan::Twitter::Scrape::Base
-        self.resource_path  = 'favorites'
-        self.page_limit     = NO_LIMIT
-        self.items_per_page = 20
+        self.resource_path      = 'favorites'
+        self.hard_request_limit = NO_LIMIT
+        self.items_per_page     = 20
         def items_count(thing) thing.favourites_count end
 
         # Extracted JSON should be an array
         def healthy?()
           parsed_contents && parsed_contents.is_a?(Array)
+        end
+
+        # set max_total_items from the favourites_count.
+        def set_total_items twitter_user_info
+          self.max_total_items = twitter_user_info['favourites_count'].to_i rescue nil
         end
 
         #
