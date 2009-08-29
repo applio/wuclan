@@ -9,27 +9,19 @@ module Wuclan
       class TwitterSearchRequest < Monkeyshines::ScrapeRequest
         # Contents are JSON
         include Monkeyshines::RawJsonContents
-        # Requests are paginated
-        include Monkeyshines::ScrapeJob::Paginated
-
-        #
-        # API features
-        #
-        self.hard_request_limit = 15
-        self.items_per_page     = 100
 
         #
         #
         #
-        def make_url query_term, hsh
-          url_str = "http://search.twitter.com/search.json?q=#{query_term}"
-          url_str << "&rpp=#{items_per_page}"
-          url_str << "&max_id=#{unscraped_span.max-1}" if unscraped_span.max
-          url_str
+        def make_url
+          "http://search.twitter.com/search.json?q=#{query_term}"
         end
 
+        def query_term
+          identifier
+        end
         def key
-          query_term
+          identifier
         end
 
         # Checks that the response parses and has the right data structure.

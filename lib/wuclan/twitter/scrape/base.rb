@@ -28,11 +28,6 @@ module Wuclan
         # Requests are paginated
         include Monkeyshines::ScrapeJob::Paginated
 
-        def initialize *args
-          super *args
-          make_url! if (! url)
-        end
-
         #
         def healthy?
           (! url.blank) && (            # has a URL and either:

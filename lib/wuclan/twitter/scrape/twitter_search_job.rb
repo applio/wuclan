@@ -19,18 +19,25 @@ module Wuclan
         # priority for search jobs if not otherwise given
         DEFAULT_PRIORITY = 65536
 
-        # Requests are paginated
-        include Monkeyshines::ScrapeJob::Paginated
-
-
         #
         # Pagination
         #
+        include Monkeyshines::ScrapeJob::Paginated
+        include Monkeyshines::ScrapeJob::PaginatedWithLimit
+
+        # API max pages
+        self.hard_request_limit = 15
+        # API max items per response
+        self.items_per_page     = 100
 
         # creates the paginated request
         def request_for_page page, pageinfo
-          (page.to_i > 1) ? self.class.new(twitter_user_id, page) : self
+          req = TwitterSearchRequest.new(query_term, page)
+          req.url << "&rpp=#{items_per_page}"
+          req.url << "&max_id=#{unscraped_span.max-1}" if unscraped_span.max
+          req
         end
+
 
         #
         #

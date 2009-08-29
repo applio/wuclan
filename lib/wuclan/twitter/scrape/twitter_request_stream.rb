@@ -39,7 +39,7 @@ class TwitterRequestStream < Monkeyshines::RequestStream::SimpleRequestStream
   def each
     request_store.each do |*raw_job_args|
       self.each_job(*raw_job_args) do |job|
-        job.each_page do |req|
+        job.each_request do |req|
           yield req
         end
       end
