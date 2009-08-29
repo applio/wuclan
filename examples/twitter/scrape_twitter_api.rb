@@ -40,6 +40,9 @@ DEFAULT_SOURCE_FETCHES = [
 # * results are sent to a ChunkedFlatFileStore
 #
 class TwitterScraper < Monkeyshines::Runner
+  #
+  # Add an option to specify follow-on scrapes at the command line
+  #
   def self.define_cmdline_options &block
     super(&block)
     yield(:source_fetches, "Follow-on requests to make. Default '#{DEFAULT_SOURCE_FETCHES.join(',')}'", :default => DEFAULT_SOURCE_FETCHES.join(','))
@@ -47,7 +50,7 @@ class TwitterScraper < Monkeyshines::Runner
 end
 
 #
-# Create runner
+# Create scraper
 #
 scraper = TwitterScraper.new({
     :log     => { :iters => 1, :dest => Monkeyshines::CONFIG[:handle] },
@@ -57,5 +60,7 @@ scraper = TwitterScraper.new({
     :sleep_time  => 0,
   })
 
-
+#
+# Run scraper
+#
 scraper.run
