@@ -46,12 +46,13 @@ module Wuclan
           # This works for most of the twitter calls
           "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page||1}"
         end
-        # Set URL from other attributes
-        def make_url!
-          self.url = make_url
-        end
 
+        # Characters to scrub from contents.
+        # !! FIXME !! -- destructive.
         BAD_CHARS = { "\r" => "&#13;", "\n" => "&#10;", "\t" => "&#9;" }
+        #
+        # Set the contents from the fetch payload
+        #
         def response= response
           self.contents = response.body.gsub(/[\r\n\t]/){|c| BAD_CHARS[c]}
         end
@@ -75,15 +76,7 @@ module Wuclan
         # sets the max_total_items for a TwitterUserTimelineRequest)
         def set_total_items from_result
         end
-
-        # #
-        # # Regular expression to grok resource from uri
-        # #                                resource_path  id  format          page           count
-        # GROK_URI_RE = %r{http://twitter.com/(\w+/\w+)/(\w+)\.json(?:\?page=(\d+))?(?:count=(\d+))?}
-        # def self.from_url
-        # end
       end
-
     end
   end
 end

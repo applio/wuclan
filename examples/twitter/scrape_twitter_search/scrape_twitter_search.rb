@@ -17,24 +17,18 @@ Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
 # * results are sent to a ChunkedFlatFileStore
 #
 
-class TwitterScraper < Monkeyshines::Runner
-  #
-  # Add an option to specify follow-on scrapes at the command line
-  #
-  def self.define_cmdline_options &block
-    super(&block)
-    yield(:source_fetches, "Follow-on requests to make. Default '#{DEFAULT_SOURCE_FETCHES.join(',')}'", :default => DEFAULT_SOURCE_FETCHES.join(','))
-  end
+class TwitterSearchScraper < Monkeyshines::Runner
 end
 
 #
 # Create scraper
 #
-scraper = TwitterScraper.new({
+scraper = TwitterSearchScraper.new({
     :log     => { :iters => 1, :dest => Monkeyshines::CONFIG[:handle] },
-    :source  => { :type  => TwitterRequestStream },
-    :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },
-    # :fetcher => { :type => TwitterFakeFetcher },
+    :source  => { :type  => :simple_request_stream },
+    # :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },
+    :dest    => { :type  => :flat_file_store, :rootdir => WORK_DIR, :filename => "test_output.tsv" },
+    :fetcher => { :type => :fake_fetcher },
     :sleep_time  => 0,
   })
 
