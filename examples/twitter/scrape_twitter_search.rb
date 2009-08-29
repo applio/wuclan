@@ -1,15 +1,12 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'monkeyshines'
+require 'set'
+# Setup
 WORK_DIR = Subdir[__FILE__,'work'].expand_path
-puts WORK_DIR
-
-#
-# Set up scrape
-#
-Monkeyshines.load_cmdline_options!
-Monkeyshines.load_global_options!(Monkeyshines::CONFIG[:handle])
 require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
+Monkeyshines.load_global_options!
+Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
 
 #
 # * jobs stream from an edamame job queue.
@@ -20,7 +17,28 @@ require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 # * results are sent to a ChunkedFlatFileStore
 #
 
-# Execute the scrape forever
-loop do
-  scraper.run
+class TwitterScraper < Monkeyshines::Runner
+  #
+  # Add an option to specify follow-on scrapes at the command line
+  #
+  def self.define_cmdline_options &block
+    super(&block)
+    yield(:source_fetches, "Follow-on requests to make. Default '#{DEFAULT_SOURCE_FETCHES.join(',')}'", :default => DEFAULT_SOURCE_FETCHES.join(','))
+  end
 end
+
+#
+# Create scraper
+#
+scraper = TwitterScraper.new({
+    :log     => { :iters => 1, :dest => Monkeyshines::CONFIG[:handle] },
+    :source  => { :type  => TwitterRequestStream },
+    :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },
+    # :fetcher => { :type => TwitterFakeFetcher },
+    :sleep_time  => 0,
+  })
+
+#
+# Run scraper
+#
+scraper.run

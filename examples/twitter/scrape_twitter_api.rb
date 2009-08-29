@@ -2,15 +2,25 @@
 require 'rubygems'
 require 'monkeyshines'
 require 'set'
+# Setup
 WORK_DIR = Subdir[__FILE__,'work'].expand_path
-puts WORK_DIR
-
-#
-# Set up scrape
-#
 require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 Monkeyshines.load_global_options!
 Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
+
+#
+# * jobs stream from a flat file
+#
+# * each job generates one or several requests (ex: followers_ids,
+#   friends_ids, user_timeline, favorites). Paginated requests stop when results
+#   overlap the prev_max item, as tracked from a central store).
+#
+# * Each request is fetched with the standard HTTP fetcher.
+#
+# * Jobs are rescheduled based on the observed item rate
+#
+# * results are sent to a ChunkedFlatFileStore
+#
 
 # Requests to make for each user
 DEFAULT_SOURCE_FETCHES = [
@@ -26,19 +36,6 @@ DEFAULT_SOURCE_FETCHES = [
   TwitterFavoritesRequest => 4,
 }.each{|klass, limit| klass.hard_request_limit = limit }
 
-#
-# * jobs stream from a flat file
-#
-# * each job generates one or several requests (ex: followers_ids,
-#   friends_ids, user_timeline, favorites). Paginated requests stop when results
-#   overlap the prev_max item, as tracked from a central store).
-#
-# * Each request is fetched with the standard HTTP fetcher.
-#
-# * Jobs are rescheduled based on the observed item rate
-#
-# * results are sent to a ChunkedFlatFileStore
-#
 class TwitterScraper < Monkeyshines::Runner
   #
   # Add an option to specify follow-on scrapes at the command line
