@@ -8,7 +8,7 @@ module Wuclan
       #
       # Produces a (possibly very large) number of AFollowsB.
       #
-      class FollowersIdsRequest < Wuclan::Twitter::Scrape::Base
+      class TwitterFollowersIdsRequest < Wuclan::Twitter::Scrape::Base
         self.resource_path  = 'followers/ids'
         self.page_limit     = 1
         self.items_per_page = NO_LIMIT
@@ -38,7 +38,7 @@ module Wuclan
       #
       # Produces a (possibly very large) number of AFollowsB.
       #
-      class FriendsIdsRequest   < Wuclan::Twitter::Scrape::Base
+      class TwitterFriendsIdsRequest   < Wuclan::Twitter::Scrape::Base
         self.resource_path  = 'friends/ids'
         self.page_limit     = 1
         self.items_per_page = NO_LIMIT

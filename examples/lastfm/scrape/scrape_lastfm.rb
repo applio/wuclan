@@ -13,6 +13,18 @@ Monkeyshines.load_global_options!(Monkeyshines::CONFIG[:handle])
 require 'wuclan/lastfm' ; include Wuclan::Lastfm::Scrape
 
 #
+# * jobs stream from an edamame job queue.
+# * Many jobs generate paginated requests, stopping when a response overlaps the
+#   prev_max item.
+# * Each request is fetched with the standard HTTP fetcher.
+#
+# * low-generation jobs are rescheduled based on the observed item rate
+# * jobs can spawn recursive requests. These have their request_generation
+#   incremented
+# * results are sent to a ChunkedFlatFileStore
+#
+
+#
 # Create runner
 #
 scraper = Monkeyshines::RecursiveRunner.new({
