@@ -1,4 +1,4 @@
-
+require 'set'
 class TwitterRequestStream < Monkeyshines::RequestStream::SimpleRequestStream
   DEFAULT_REQUEST_SCOPE = Wuclan::Twitter::Scrape
   TwitterRequestStream::DEFAULT_OPTIONS = { :klass => TwitterUserRequest, }

@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'monkeyshines'
-require 'set'
+require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 # Setup
 WORK_DIR = Subdir[__FILE__,'work'].expand_path
-require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 Monkeyshines.load_global_options!
 Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
 
@@ -22,24 +21,18 @@ Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
 # * results are sent to a ChunkedFlatFileStore
 #
 
-# Requests to make for each user
+#
+# Follow-on requests to make for each user
+#
 DEFAULT_SOURCE_FETCHES = [
   :user,
   :followers_ids, :friends_ids,
   # :followers, :friends, :favorites
 ]
-
-# Don't spend all day on follow-on requests
-{
-  TwitterFollowersRequest => 10,
-  TwitterFriendsRequest   => 10,
-  TwitterFavoritesRequest => 4,
-}.each{|klass, limit| klass.hard_request_limit = limit }
-
+#
+# You can also specify these with --source-fetches on the command line
+#
 class TwitterScraper < Monkeyshines::Runner
-  #
-  # Add an option to specify follow-on scrapes at the command line
-  #
   def self.define_cmdline_options &block
     super(&block)
     yield(:source_fetches, "Follow-on requests to make. Default '#{DEFAULT_SOURCE_FETCHES.join(',')}'", :default => DEFAULT_SOURCE_FETCHES.join(','))
@@ -47,7 +40,14 @@ class TwitterScraper < Monkeyshines::Runner
 end
 
 #
-# Create scraper
+# Don't spend all day on follow-on requests
+#
+{ TwitterFollowersRequest => 10,
+  TwitterFriendsRequest   => 10,
+  TwitterFavoritesRequest => 4, }.each{|klass, limit| klass.hard_request_limit = limit }
+
+#
+# Set up scraper
 #
 scraper = TwitterScraper.new({
     :log     => { :iters => 1, :dest => Monkeyshines::CONFIG[:handle] },
