@@ -38,6 +38,14 @@ module Wuclan
           req
         end
 
+        def key
+          query_term
+        end
+
+
+        def to_hash
+          super().merge( 'type' => self.class.to_s, 'key' => query_term )
+        end
 
         #
         #

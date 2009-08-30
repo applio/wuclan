@@ -1,20 +1,22 @@
+$: << File.dirname(__FILE__)+'/../../../../edamame/lib'
 require 'edamame/monitoring'
-EDAMAME_DB_DIR = '/data/distdb' unless defined?(EDAMAME_DB_DIR)
+WORK_DIR = File.dirname(__FILE__)+'/work'
 
 #
 # For debugging:
 #
-#   sudo god -c /Users/flip/ics/edamame/utils/god/edamame.god -D
+#   sudo god -c this_file.god -D
 #
 # (for production, use the etc/initc.d script in this directory)
 #
 # TODO: define an EdamameDirector that lets us name these collections.
 #
 THE_FAITHFUL = [
-  [BeanstalkdGod, { :port => 11210, :max_mem_usage => 2.gigabytes,  }],
-  [TyrantGod,     { :port => 11212, :db_dirname => EDAMAME_DB_DIR, :db_name => 'flat_delay_queue.tct' }],
-  [TyrantGod,     { :port => 11213, :db_dirname => EDAMAME_DB_DIR, :db_name => 'fetched_urls.tch' }],
-  # [SinatraGod,    { :port => 11219, :app_dirname => File.dirname(__FILE__)+'/../../app/edamame_san' }],
+  # twitter_search
+  [BeanstalkdGod, { :port => 11240, :max_mem_usage => 100.megabytes,  }],
+  [TyrantGod,     { :port => 11241, :db_dirname => WORK_DIR, :db_name => "twitter_search-queue.tct" }],
+  #
+  # [TyrantGod,     { :port => 11249, :db_dirname => WORK_DIR, :db_name => "twitter_search-flat.tct" }],
 ]
 
 THE_FAITHFUL.each do |klass, config|

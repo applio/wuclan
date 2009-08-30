@@ -1,4 +1,3 @@
-require 'active_support/core_ext/class/inheritable_attributes.rb'
 require 'wuclan/models/tweet/tweet_regexes'
 module Wuclan::Models
 
