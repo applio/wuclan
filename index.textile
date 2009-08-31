@@ -8,11 +8,9 @@ h1(gemheader). {{ site.gemname }} %(small):: Social Graph Chainsaw%
 
 p(description). {{ site.description }}
 
-<div class="toggle">
+<div class="toggle"><h2>About Wuclan</h2>
 
-h2. Million+ node Social Network Analysis
-
-Wuclan uses Wukong (Hadoop massive-data processing made easy) and Monkeyshines (massive-scale directed scraper) to let you grok the deep structure of social networks. It is designed to scrape in a way that respectful of the terms and technical limits of each site. We use it in practice to collect and analyze social graphs as large as 50 million-nodes, 1 billion-edges, 500 GB raw data  -- all of it actual data extracted in compliance with the site's terms of service.
+Wuclan uses "Wukong":http://mrflip.github.com/wukong (Hadoop massive-data processing made easy) and "Monkeyshines":http://mrflip.github.com/monkeyshines (massive-scale directed scraper) to grok the deep structure of social networks. It is designed to scrape in a way that respectful of the terms and technical limits of each site while being agressive and efficient with your resources. We use it in practice to collect and analyze social graphs as large as 50 million-nodes, 1 billion-edges, 500 GB raw data  -- all of it actual data extracted in compliance with the site's terms of service.
 
 Currently wuclan handles:
 
@@ -28,21 +26,15 @@ APIs are nice and all, but they prevent any insight into a) global properties, o
 
 Wuclan is strictly meant for such massive-scale investigations. Unless you're planning to do your final analysis on either hadoop or an enterprise-grade database system it's probably not worth the hassle.
 
-</div><div class="toggle">
-
-h2. Wuclan: Scraping
+</div><div class="toggle"><h2>Wuclan: Scraping</h2>
 
 is almost ready for public use. Check back shortly.
 
-</div><div class="toggle">
-
-h2. Wuclan: Analysis
+</div><div class="toggle"><h2>Wuclan: Analysis</h2>
 
 actually most of this still lives in the imw_twitter_friends repo.
 
-</div><div class="toggle">
-
-h2. More info
+</div><div class="toggle"><h2>More info</h2>
 
 There are many useful examples in the examples/ directory.
 
