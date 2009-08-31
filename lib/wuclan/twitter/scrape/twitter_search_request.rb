@@ -45,10 +45,6 @@ module Wuclan
         def items
           parsed_contents['results'] if parsed_contents
         end
-        # Number of items returned in this request
-        def num_items()
-          items ? items.length : 0
-        end
         # Span of IDs. Assumes the response has the ids in sort order oldest to newest
         # (which the twitter API provides)
         def span
@@ -57,7 +53,7 @@ module Wuclan
         # Span of created_at times covered by this request.
         # Useful for rate estimation.
         def timespan
-          [Time.parse(items.last['created_at']), Time.parse(items.first['created_at'])] rescue nil
+          [Time.parse(items.last['created_at']).utc, Time.parse(items.first['created_at']).utc] rescue nil
         end
 
       end

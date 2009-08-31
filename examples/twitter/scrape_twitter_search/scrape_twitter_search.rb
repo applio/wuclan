@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'rubygems'
+require 'edamame'
 require 'monkeyshines'
 require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 # Setup
@@ -31,7 +32,7 @@ end
 # Create scraper
 #
 scraper = TwitterSearchScraper.new({
-    :log     => { :iters => 1, :dest => nil }, # Monkeyshines::CONFIG[:handle]
+    :log     => { :iters => 100, :dest => nil }, # Monkeyshines::CONFIG[:handle]
     # :source  => { :type  => TwitterSearchStream, :klass => TwitterSearchJob },
     :source  => { :type  => TwitterSearchRequestStream, :tube => default_tube,
       :queue => { :uris => ['localhost:11240'], },
@@ -39,7 +40,7 @@ scraper = TwitterSearchScraper.new({
     # :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },
     :dest    => { :type  => :flat_file_store, :filename => WORK_DIR+"/test_output.tsv" },
     # :fetcher => { :type => TwitterSearchFakeFetcher },
-    :sleep_time  => 0.1,
+    :sleep_time  => 0,
   })
 
 #

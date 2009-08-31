@@ -18,10 +18,10 @@ end
 default_tube = options[:handle].to_s.gsub(/\W+/,'').gsub(/_/,'-')
 p default_tube
 
-DEFAULT_PRIORITY = 65536
-DEFAULT_TTR      = nil
-DEFAULT_RESERVE_TIMEOUT = 2
-IMMEDIATELY      = 0
+DEFAULT_PRIORITY        = 65536
+DEFAULT_TTR             = nil
+DEFAULT_RESERVE_TIMEOUT = 15
+IMMEDIATELY             = 0
 source = Monkeyshines::Store::FlatFileStore.new :filename => options[:source_filename]
 dest = Edamame::PersistentQueue.new( :tube => default_tube,
   :queue => { :uris => ['localhost:11240'], },
@@ -33,14 +33,14 @@ source.each do |query_term, priority, prev_rate, prev_items, prev_span_min, prev
   prev_items    = prev_items.to_i
   prev_span_min = prev_span_min.to_i
   prev_span_max = prev_span_max.to_i
-  prev_rate = prev_rate.to_f
-  priority  = DEFAULT_PRIORITY if (priority  == 0  )
-  prev_rate = nil              if (prev_rate < 1e-6)
+  prev_rate     = prev_rate.to_f
+  priority      = DEFAULT_PRIORITY if (priority  == 0  )
+  prev_rate     = nil              if (prev_rate < 1e-6)
 
   twitter_search = { :type => 'TwitterSearchRequest', :key => query_term }
 
   job = Edamame::Job.new(default_tube, priority, nil, 1,
-    Recurring.new(60 / prev_rate.to_f, prev_span_max),
+    Recurring.new(1000.0 / prev_rate.to_f, prev_span_max, prev_items, prev_rate),
     twitter_search
     )
   dest.put job, job.priority, IMMEDIATELY
