@@ -13,7 +13,7 @@ module Wuclan
       class TwitterUserRequest         < Wuclan::Twitter::Scrape::Base
         self.resource_path      = 'users/show'
         self.hard_request_limit = 1
-        self.items_per_page     = 1
+        self.max_items     = 1
         def items_count(thing) 1 end
 
         # Extracted JSON should be a single user_with_tweet hash

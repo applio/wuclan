@@ -19,7 +19,7 @@ module Wuclan
           [:response_message, String],
           [:contents,         String]
           )
-        class_inheritable_accessor :resource_path, :page_limit, :items_per_page
+        class_inheritable_accessor :resource_path, :page_limit, :max_items
 
         # Let us be peers with AFollowsB and TwitterUser and etc.
         include Wuclan::Twitter::Model

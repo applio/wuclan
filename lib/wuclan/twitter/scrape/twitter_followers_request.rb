@@ -15,7 +15,7 @@ module Wuclan
       class TwitterFollowersRequest    < Wuclan::Twitter::Scrape::Base
         self.resource_path      = 'statuses/followers'
         self.hard_request_limit = NO_LIMIT
-        self.items_per_page     = 100
+        self.max_items     = 100
         def items_count(thing) thing.followers_count end
 
         # set max_total_items from the favourites_count.
@@ -57,7 +57,7 @@ module Wuclan
       class TwitterFriendsRequest      < Wuclan::Twitter::Scrape::Base
         self.resource_path      = 'statuses/friends'
         self.hard_request_limit = NO_LIMIT
-        self.items_per_page     = 100
+        self.max_items     = 100
         def items_count(thing) thing.friends_count end
 
         # set max_total_items from the friends_count.
@@ -100,7 +100,7 @@ module Wuclan
       class TwitterFavoritesRequest    < Wuclan::Twitter::Scrape::Base
         self.resource_path      = 'favorites'
         self.hard_request_limit = NO_LIMIT
-        self.items_per_page     = 20
+        self.max_items     = 20
         def items_count(thing) thing.favourites_count end
 
         # Extracted JSON should be an array

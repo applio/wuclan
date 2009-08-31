@@ -20,5 +20,6 @@ module Wuclan
   end
 end
 autoload :TwitterRequestStream,         'wuclan/twitter/scrape/twitter_request_stream'
-autoload :TwitterSearchRequestStream,   'wuclan/twitter/scrape/twitter_search_request_stream'
 autoload :TwitterFakeFetcher,           'wuclan/twitter/scrape/twitter_fake_fetcher'
+autoload :TwitterSearchRequestStream,   'wuclan/twitter/scrape/twitter_search_request_stream'
+autoload :TwitterSearchFakeFetcher,     'wuclan/twitter/scrape/twitter_search_fake_fetcher'

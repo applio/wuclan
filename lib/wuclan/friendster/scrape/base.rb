@@ -28,7 +28,7 @@ module Wuclan
         self.api_key = Monkeyshines::CONFIG[:api_key] rescue nil
 
         # Paginated
-        class_inheritable_accessor :resource_path, :page_limit, :items_per_page
+        class_inheritable_accessor :resource_path, :page_limit, :max_items
         # API
         cattr_accessor :api_key
         cattr_accessor :api_secret

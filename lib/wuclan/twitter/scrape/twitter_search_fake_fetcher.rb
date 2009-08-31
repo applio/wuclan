@@ -32,12 +32,12 @@ class TwitterSearchFakeFetcher < Monkeyshines::Fetcher::FakeFetcher
   end
 end
 
-# TwitterSearchStream.class_eval do
+# TwitterSearchRequestStream.class_eval do
 #   def do_faking job
-#     TwitterSearchFakeFetcher.items_rate = job.prev_rate || 1
-#     job.prev_span_max = (TwitterSearchFakeFetcher.fake_time(rand(15) * 105)*100).to_i
+#     TwitterSearchFakeFetcher.items_rate = (1 / job.scheduling.delay) || 1
+#     # job.scheduling.prev_max = (TwitterSearchFakeFetcher.fake_time(rand(15) * 105)*100).to_i
 #     p [
-#       job.prev_span_max,
+#       job.scheduling.prev_max,
 #       TwitterSearchFakeFetcher.fake_time(0).to_i
 #     ]
 #   end

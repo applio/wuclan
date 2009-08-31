@@ -21,8 +21,8 @@ module Wuclan
         # Contents are JSON
         include Monkeyshines::RawJsonContents
         # Paginated
-        class_inheritable_accessor :resource_path, :page_limit, :items_per_page
-        self.items_per_page = 50
+        class_inheritable_accessor :resource_path, :page_limit, :max_items
+        self.max_items = 50
 
         # API
         cattr_accessor :api_key
@@ -38,7 +38,7 @@ module Wuclan
         # Generate request URL from other attributes
         def make_url
           # This works for most of the twitter calls
-          "http://ws.audioscrobbler.com/2.0/?method=#{resource_path}#{identifier}&limit=#{items_per_page}&page=#{page}&api_key=#{api_key}&format=json"
+          "http://ws.audioscrobbler.com/2.0/?method=#{resource_path}#{identifier}&limit=#{max_items}&page=#{page}&api_key=#{api_key}&format=json"
         end
 
         def healthy?

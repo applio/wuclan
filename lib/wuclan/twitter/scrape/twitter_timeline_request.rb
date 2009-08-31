@@ -36,12 +36,12 @@ module Wuclan
       class TwitterUserTimelineRequest  < Wuclan::Twitter::Scrape::TimelineRequest
         self.resource_path      = 'statuses/user_timeline'
         self.hard_request_limit = 16
-        self.items_per_page     = 200
+        self.max_items     = 200
         def items_count(thing) thing.status_count end
 
         # Url from properties
         def make_url
-          "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}&count=#{items_per_page}"
+          "http://twitter.com/#{resource_path}/#{twitter_user_id}.json?page=#{page}&count=#{max_items}"
         end
 
         # set max_total_items from the statuses_count.
@@ -58,7 +58,7 @@ module Wuclan
       class TwitterPublicTimelineRequest < Wuclan::Twitter::Scrape::TimelineRequest
         self.resource_path      = 'statuses/public_timeline'
         self.hard_request_limit = 1
-        self.items_per_page     = 600
+        self.max_items     = 600
         def items_count(thing) 1 end
         def make_url() "http://twitter.com/#{resource_path}.json"  end
       end

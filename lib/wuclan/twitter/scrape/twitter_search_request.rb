@@ -9,6 +9,13 @@ module Wuclan
       class TwitterSearchRequest < Monkeyshines::ScrapeRequest
         # Contents are JSON
         include Monkeyshines::RawJsonContents
+        # Pagination
+        include Monkeyshines::ScrapeRequestCore::Paginated
+        # include Monkeyshines::ScrapeRequestCore::PaginatedWithLimit
+        # API max items per response
+        self.max_items     = 100
+        # API max pages
+        self.hard_request_limit = 15
 
         #
         #

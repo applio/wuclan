@@ -15,9 +15,8 @@ options = Trollop::options do
   opt :handle,          "Identifying string for scrape",     :type => String, :required => true
   opt :source_filename, "URI for scrape store to load from", :type => String, :required => true
 end
-default_tube = options[:handle].gsub!(/[^A-Z0-9a-z\-]+/,'')
-
-
+default_tube = options[:handle].to_s.gsub(/\W+/,'').gsub(/_/,'-')
+p default_tube
 
 DEFAULT_PRIORITY = 65536
 DEFAULT_TTR      = nil
@@ -38,12 +37,10 @@ source.each do |query_term, priority, prev_rate, prev_items, prev_span_min, prev
   priority  = DEFAULT_PRIORITY if (priority  == 0  )
   prev_rate = nil              if (prev_rate < 1e-6)
 
-  twitter_search = TwitterSearchJob.new(
-    query_term, priority, prev_rate, prev_items, prev_span_min, prev_span_max
-    )
+  twitter_search = { :type => 'TwitterSearchRequest', :key => query_term }
 
   job = Edamame::Job.new(default_tube, priority, nil, 1,
-    Recurring.new(1 / prev_rate.to_f, prev_span_max),
+    Recurring.new(60 / prev_rate.to_f, prev_span_max),
     twitter_search
     )
   dest.put job, job.priority, IMMEDIATELY
