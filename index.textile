@@ -4,16 +4,17 @@ title:  mrflip.github.com/wuclan
 collapse: false
 ---
 
-h1(gemheader). {{ site.gemname }} %(small):: scraper%
-
+h1(gemheader). {{ site.gemname }} %(small):: Social Graph Chainsaw%
 
 p(description). {{ site.description }}
 
 <div class="toggle">
 
-h2. Wuclan abstracts social networks
+h2. Million+ node Social Network Analysis
 
-Wuclan uses Wukong and Monkeyshines to let you grok the deep structure of social networks. It is designed to scrape in a way that respectful of the terms and technical limits of each site. Currently it handles:
+Wuclan uses Wukong (Hadoop massive-data processing made easy) and Monkeyshines (massive-scale directed scraper) to let you grok the deep structure of social networks. It is designed to scrape in a way that respectful of the terms and technical limits of each site. We use it in practice to collect and analyze social graphs as large as 50 million-nodes, 1 billion-edges, 500 GB raw data  -- all of it actual data extracted in compliance with the site's terms of service.
+
+Currently wuclan handles:
 
 * Twitter -- API
 * Twitter -- Search
@@ -29,11 +30,15 @@ Wuclan is strictly meant for such massive-scale investigations. Unless you're pl
 
 </div><div class="toggle">
 
-h2. Wuclan for Scraping
+h2. Wuclan: Scraping
+
+is almost ready for public use. Check back shortly.
 
 </div><div class="toggle">
 
-h2. Wuclan for Analysis
+h2. Wuclan: Analysis
+
+actually most of this still lives in the imw_twitter_friends repo.
 
 </div><div class="toggle">
 
