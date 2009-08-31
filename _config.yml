@@ -15,12 +15,12 @@ header_ref:     '.html'    # .html for subdirs, / for main.
 assets_path:    '/'        # http://github.mrflip.com
 
 gemuser:        mrflip
-gemname:        monkeyshines
+gemname:        wuclan
 gemversion:     0.1.1
-title:          mrflip.github.com/monkeyshines
+title:          mrflip.github.com/wuclan
 
 keywords:       [ 'wukong,hadoop,ruby,mrflip,infochimps,map,reduce,streaming,dumbo,happy,mrtoolkit,script,simple' ]
-description:    "Monkeyshines: guided scraper"
+description:    "Social Network Analysis Chainsaw"
 header_files:
   - INSTALL
   - usage

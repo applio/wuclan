@@ -1,6 +1,6 @@
 ---
 layout: default
-title:  mrflip.github.com/monkeyshines
+title:  mrflip.github.com/wuclan
 collapse: false
 ---
 
@@ -11,7 +11,29 @@ p(description). {{ site.description }}
 
 <div class="toggle">
 
-h2. How to write a Monkeyshines Scraper
+h2. Wuclan abstracts social networks
+
+Wuclan uses Wukong and Monkeyshines to let you grok the deep structure of social networks. It is designed to scrape in a way that respectful of the terms and technical limits of each site. Currently it handles:
+
+* Twitter -- API
+* Twitter -- Search
+* Twitter -- Hosebird
+* Last.fm
+* Opensocial
+
+h2. Why?
+
+APIs are nice and all, but they prevent any insight into a) global properties, or b) deep structure.  You can't find global word frequency and dispersion, or average clustering coefficient, or calculate pagerank, or determine weighted-shortest-paths connections between two people through an API call.  But with a 10 machine hadoop cluster and a good-sized collection of data, you can (and wuclan has scripts to help answer many of those questions).
+
+Wuclan is strictly meant for such massive-scale investigations. Unless you're planning to do your final analysis on either hadoop or an enterprise-grade database system it's probably not worth the hassle.
+
+</div><div class="toggle">
+
+h2. Wuclan for Scraping
+
+</div><div class="toggle">
+
+h2. Wuclan for Analysis
 
 </div><div class="toggle">
 
