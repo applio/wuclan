@@ -7,10 +7,8 @@ require 'wuclan/twitter' ; include Wuclan::Twitter::Scrape
 WORK_DIR = Subdir[__FILE__,'work'].expand_path.to_s
 Monkeyshines.load_global_options!
 Monkeyshines.load_cmdline_options!
-
 Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
-
-default_tube = Monkeyshines::CONFIG[:handle].to_s.gsub!(/_/,'-')
+default_tube = Monkeyshines::CONFIG[:handle].to_s.gsub!(/[_\.]/,'-')
 
 #
 # * jobs stream from an edamame job queue.
@@ -21,26 +19,18 @@ default_tube = Monkeyshines::CONFIG[:handle].to_s.gsub!(/_/,'-')
 # * results are sent to a ChunkedFlatFileStore
 #
 
-class TwitterSearchScraper < Monkeyshines::Runner
-  def after_fetch req
-    super req
-    # p [req.query_term, req.num_items, req.span, req.timespan, req.page, req.parsed_contents['next_page']]
-  end
-end
-
 #
 # Create scraper
 #
-scraper = TwitterSearchScraper.new({
-    :log     => { :iters => 100, :dest => nil }, # Monkeyshines::CONFIG[:handle]
-    # :source  => { :type  => TwitterSearchStream, :klass => TwitterSearchJob },
+scraper = Monkeyshines::Runner.new({
+    :log     => { :iters => 600, :time => 150, :dest => nil }, # Monkeyshines::CONFIG[:handle]
     :source  => { :type  => TwitterSearchRequestStream, :tube => default_tube,
       :queue => { :uris => ['localhost:11240'], },
       :store => { :uri =>            ':11241',  }, },
-    # :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },
-    :dest    => { :type  => :flat_file_store, :filename => WORK_DIR+"/test_output.tsv" },
+    :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },
+    # :dest    => { :type  => :flat_file_store, :filename => WORK_DIR+"/test_output.tsv" },
     # :fetcher => { :type => TwitterSearchFakeFetcher },
-    :sleep_time  => 0,
+    # :sleep_time  => 0.5 ,
   })
 
 #

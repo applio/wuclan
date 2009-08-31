@@ -44,7 +44,6 @@ class TwitterSearchRequestStream < Monkeyshines::RequestStream::EdamameQueue
     work(queue_request_timeout, TwitterSearchJob) do |job|
       # do_faking(qjob)
       job.each_request(&block)
-      p ['done work', job.scheduling]
     end
   end
 end
