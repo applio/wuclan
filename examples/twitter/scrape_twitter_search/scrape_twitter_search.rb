@@ -8,7 +8,6 @@ WORK_DIR = Subdir[__FILE__,'work'].expand_path.to_s
 Monkeyshines.load_global_options!
 Monkeyshines.load_cmdline_options!
 Monkeyshines::CONFIG[:fetcher] = Monkeyshines::CONFIG[:twitter_api]
-default_tube = Monkeyshines::CONFIG[:handle].to_s.gsub!(/[_\.]/,'-')
 
 #
 # * jobs stream from an edamame job queue.
@@ -24,7 +23,7 @@ default_tube = Monkeyshines::CONFIG[:handle].to_s.gsub!(/[_\.]/,'-')
 #
 scraper = Monkeyshines::Runner.new({
     :log     => { :iters => 600, :time => 150, :dest => nil }, # Monkeyshines::CONFIG[:handle]
-    :source  => { :type  => TwitterSearchRequestStream, :tube => default_tube,
+    :source  => { :type  => TwitterSearchRequestStream,
       :queue => { :uris => ['localhost:11240'], },
       :store => { :uri =>            ':11241',  }, },
     :dest    => { :type  => :chunked_flat_file_store, :rootdir => WORK_DIR },

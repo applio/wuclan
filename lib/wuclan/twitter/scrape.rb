@@ -1,9 +1,10 @@
 module Wuclan
   module Twitter
     module Scrape
-      autoload :TwitterSearchRequest,  'wuclan/twitter/scrape/twitter_search_request'
-      autoload :TwitterSearchJob,      'wuclan/twitter/scrape/twitter_search_job'
-
+      # Search API
+      autoload :TwitterSearchRequest,         'wuclan/twitter/scrape/twitter_search_request'
+      autoload :TwitterSearchJob,             'wuclan/twitter/scrape/twitter_search_job'
+      # Main API
       autoload :Base,                         'wuclan/twitter/scrape/base'
       autoload :TwitterUserRequest,           'wuclan/twitter/scrape/twitter_user_request'
       autoload :TwitterFollowersRequest,      'wuclan/twitter/scrape/twitter_followers_request'

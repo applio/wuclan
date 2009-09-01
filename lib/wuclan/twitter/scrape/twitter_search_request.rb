@@ -11,7 +11,6 @@ module Wuclan
         include Monkeyshines::RawJsonContents
         # Pagination
         include Monkeyshines::ScrapeRequestCore::Paginated
-        # include Monkeyshines::ScrapeRequestCore::PaginatedWithLimit
         # API max items per response
         self.max_items     = 100
         # API max pages

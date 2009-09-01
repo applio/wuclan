@@ -57,7 +57,7 @@ module Wuclan
         #
 
         # creates the paginated request
-        def request_for_page page, pageinfo
+        def request_for_page page, pageinfo=nil
           (page.to_i > 1) ? self.class.new(twitter_user_id, page) : self
         end
 
