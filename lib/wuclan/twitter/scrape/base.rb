@@ -26,7 +26,7 @@ module Wuclan
         # Contents are JSON
         include Monkeyshines::RawJsonContents
         # Requests are paginated
-        include Monkeyshines::ScrapeJob::Paginated
+        include Monkeyshines::ScrapeRequest::Paginated
 
         #
         def healthy?

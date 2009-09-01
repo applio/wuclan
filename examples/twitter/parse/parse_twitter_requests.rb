@@ -1,15 +1,15 @@
 #!/usr/bin/env ruby
 $: << ENV['WUKONG_PATH']
 require 'rubygems'
-require 'trollop'
 require 'wukong'
 require 'monkeyshines'
+
 require 'wuclan/twitter'
+# if you're anyone but original author this next require is useless but harmless.
+require 'wuclan/twitter/scrape/old_skool_request_classes'
 # un-namespace request classes.
 include Wuclan::Twitter::Scrape
 include Wuclan::Twitter::Model
-# if you're anyone but original author this next require is useless but harmless.
-require 'wuclan/twitter/scrape/old_skool_request_classes'
 
 #
 #

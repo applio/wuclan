@@ -9,16 +9,6 @@ module Wuclan::Twitter::Model
       to_a[0..(num_key_fields-1)].join("-")
     end
 
-    def fix_id!
-      return if @ids_fixed
-      numeric_id_fields.each{|id| self[id] = ModelCommon.zeropad_id(self[id])}
-      @ids_fixed = true
-    end
-    def to_a
-      fix_id!
-      super
-    end
-
     # ===========================================================================
     #
     # Metrics
