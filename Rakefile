@@ -12,8 +12,8 @@ begin
     gem.homepage       = "http://github.com/mrflip/wuclan"
     gem.authors        = ["Philip (flip) Kromer"]
     gem.files          =  FileList["[A-Z]*", "{bin,generators,lib,test,docs}/**/*"]
-    gem.add_dependency 'mrflip-wukong'
-    gem.add_dependency 'mrflip-monkeyshines'
+    gem.add_dependency 'wukong'
+    gem.add_dependency 'monkeyshines'
     gem.add_dependency 'trollop'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

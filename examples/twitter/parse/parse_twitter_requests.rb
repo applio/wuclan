@@ -1,5 +1,5 @@
-#!/usr/bin/env ruby
-$: << ENV['WUKONG_PATH']
+#!/usr/bin/env jruby
+#$: << ENV['WUKONG_PATH']
 require 'rubygems'
 require 'wukong'
 require 'monkeyshines'
