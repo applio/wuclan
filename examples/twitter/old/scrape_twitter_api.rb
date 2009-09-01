@@ -5,7 +5,7 @@ require 'monkeyshines/runner/base'
 require 'pathname'
 
 #
-require 'wuclan/domains/twitter'
+require 'wuclan/twitter'
 # un-namespace request classes.
 include Wuclan::Twitter::Scrape
 

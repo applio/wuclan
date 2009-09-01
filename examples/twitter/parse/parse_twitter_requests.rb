@@ -4,12 +4,12 @@ require 'rubygems'
 require 'trollop'
 require 'wukong'
 require 'monkeyshines'
-require 'wuclan/domains/twitter'
+require 'wuclan/twitter'
 # un-namespace request classes.
 include Wuclan::Twitter::Scrape
 include Wuclan::Twitter::Model
 # if you're anyone but original author this next require is useless but harmless.
-require 'wuclan/domains/twitter/scrape/old_skool_request_classes'
+require 'wuclan/twitter/scrape/old_skool_request_classes'
 
 #
 #

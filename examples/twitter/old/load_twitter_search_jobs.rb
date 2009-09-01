@@ -6,7 +6,7 @@ require 'trollop'
 require 'wukong'
 require 'monkeyshines'
 #
-require 'wuclan/domains/twitter/scrape' ; include Wuclan
+require 'wuclan/twitter/scrape' ; include Wuclan
 require 'monkeyshines/utils/uri'
 require 'monkeyshines/fetcher/http_fetcher'
 #

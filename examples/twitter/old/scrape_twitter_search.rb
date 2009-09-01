@@ -5,7 +5,7 @@ require 'rubygems'
 require 'trollop'
 require 'wukong'
 require 'monkeyshines'
-require 'wuclan/domains/twitter/scrape' ; include Wuclan
+require 'wuclan/twitter/scrape' ; include Wuclan
 
 require 'monkeyshines/fetcher/http_fetcher'
 require 'monkeyshines/utils/filename_pattern'

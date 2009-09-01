@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 require 'wukong'
 require 'monkeyshines'
-require 'wuclan/domains/twitter'
+require 'wuclan/twitter'
 $: << '/home/flip/ics/rubygems/json-1.1.7/lib'
 include Wuclan::Twitter::Scrape
 include Wuclan::Twitter::Model
